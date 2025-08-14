@@ -6,7 +6,7 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext"; 
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark, lang } = useAppContext(); 
+  const { rtl, dark, toggleDark, lang } = useAppContext();
   const [countdown, setCountdown] = useState(""); 
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -100,7 +100,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           onClick={() => setSidebarOpen(true)}
           style={{
             position: "fixed",
-            right: 0,
+            right: rtl ? "initial" : "0",  // Pindah jika rtl
+            left: rtl ? "0" : "initial",   // Pindah jika rtl
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2000,
@@ -123,8 +124,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
+          direction: rtl ? "rtl" : "ltr",
           backgroundColor: dark ? "#333" : "#fff", // Ganti dengan warna abu-abu saat dark mode
           color: dark ? "#fff" : "#111",
+          padding: "20px", // Menambahkan padding untuk memberi jarak dengan tepi
         }}
       >
         {children}
@@ -157,24 +160,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           Logout
         </button>
       )}
-
-      {/* DARK MODE TOGGLE */}
-      <button
-        onClick={toggleDark}
-        style={{
-          position: "fixed",
-          bottom: "100px",
-          right: "20px",
-          background: dark ? "#333" : "#fff",
-          color: dark ? "#fff" : "#111",
-          border: "none",
-          padding: "10px 15px",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
-        {dark ? "🌙" : "🌞"} Toggle Dark Mode
-      </button>
     </>
   );
 }
