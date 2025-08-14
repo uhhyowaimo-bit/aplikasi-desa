@@ -1,16 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar"; 
-import BottomNav from "@/components/BottomNav"; 
-import LoginSheet from "@/components/LoginSheet"; 
-import { useAppContext } from "@/context/AppContext"; 
+import Sidebar from "@/components/Sidebar";
+import BottomNav from "@/components/BottomNav";
+import LoginSheet from "@/components/LoginSheet";
+import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { rtl, dark, toggleDark, lang } = useAppContext();
-  const [countdown, setCountdown] = useState(""); 
+  const { dark, toggleDark } = useAppContext(); // Mengambil status dark mode
+  const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false); 
+  const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const handleLoginOpen = () => {
     setShowLogin(true);
-    setSidebarOpen(false); 
+    setSidebarOpen(false);
   };
 
   const handleLogout = () => {
@@ -100,8 +100,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           onClick={() => setSidebarOpen(true)}
           style={{
             position: "fixed",
-            right: rtl ? "initial" : "0",  // Pindah jika rtl
-            left: rtl ? "0" : "initial",   // Pindah jika rtl
+            right: 0,
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2000,
@@ -124,8 +123,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          direction: rtl ? "rtl" : "ltr",
-          backgroundColor: dark ? "#333" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          backgroundColor: dark ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
           color: dark ? "#fff" : "#111",
           padding: "20px", // Menambahkan padding untuk memberi jarak dengan tepi
         }}
