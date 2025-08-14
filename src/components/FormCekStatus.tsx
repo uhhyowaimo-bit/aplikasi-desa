@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
+// Tipe data untuk hasil status pengajuan
 interface HasilStatus {
   error?: string;
   nama?: string;
@@ -10,10 +11,11 @@ interface HasilStatus {
 }
 
 export default function FormCekStatus() {
-  const [kode, setKode] = useState<string>(""); // Tipe string untuk kode
-  const [hasil, setHasil] = useState<HasilStatus | null>(null); // Tipe state lebih spesifik
-  const [loading, setLoading] = useState<boolean>(false); // Tipe boolean untuk loading
+  const [kode, setKode] = useState<string>("");  // Tipe kode sebagai string
+  const [hasil, setHasil] = useState<HasilStatus | null>(null);  // Tipe hasil yang lebih spesifik
+  const [loading, setLoading] = useState<boolean>(false);  // Tipe boolean untuk loading
 
+  // Fungsi untuk menangani pengecekan status berdasarkan kode
   const handleCek = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -34,6 +36,7 @@ export default function FormCekStatus() {
     }
   };
 
+  // Mapping status dengan nilai deskriptif
   const statusMap: Record<string, string> = {
     belum_diterima: "Belum Diterima",
     sudah_diterima: "Sudah Diterima",
@@ -41,8 +44,10 @@ export default function FormCekStatus() {
   };
 
   return (
-    <div>
+    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h3>Cek Status Pengajuan</h3>
+
+      {/* Formulir untuk input kode verifikasi */}
       <form onSubmit={handleCek} style={{ marginTop: "15px" }}>
         <input
           type="text"
@@ -50,7 +55,13 @@ export default function FormCekStatus() {
           value={kode}
           onChange={(e) => setKode(e.target.value)}
           required
-          style={{ padding: "8px", width: "100%", marginBottom: "10px" }}
+          style={{
+            padding: "8px",
+            width: "100%",
+            marginBottom: "10px",
+            borderRadius: "5px",
+            border: "1px solid #ddd",
+          }}
         />
         <button
           type="submit"
@@ -60,16 +71,19 @@ export default function FormCekStatus() {
             color: "#fff",
             border: "none",
             borderRadius: "5px",
+            cursor: "pointer",
           }}
         >
           Cek
         </button>
       </form>
 
-      {loading && <p>Mengecek...</p>}
+      {/* Menampilkan status loading */}
+      {loading && <p style={{ color: "#666" }}>Mengecek...</p>}
 
+      {/* Menampilkan hasil */}
       {hasil && (
-        <div style={{ marginTop: "15px" }}>
+        <div style={{ marginTop: "15px", color: "#333" }}>
           {hasil.error ? (
             <p style={{ color: "red" }}>{hasil.error}</p>
           ) : (
