@@ -95,28 +95,29 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </header>
 
       {/* BURGER BUTTON */}
-      {!showLogin && !sidebarOpen && (
-        <button
-          onClick={() => setSidebarOpen(true)}
-          style={{
-            position: "fixed",
-            right: rtl ? "unset" : "0", // Menyesuaikan posisi button berdasarkan RTL
-            left: rtl ? "0" : "unset",  // Menyesuaikan posisi button berdasarkan RTL
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 2000,
-            background: dark ? "#444" : "#6a11cb",
-            color: "#fff",
-            border: "none",
-            padding: "10px 15px",
-            borderTopLeftRadius: "8px",
-            borderBottomLeftRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          🍔
-        </button>
-      )}
+{!showLogin && !sidebarOpen && (
+  <button
+    onClick={() => setSidebarOpen(true)}
+    style={{
+      position: "fixed",
+      top: "50%",
+      transform: "translateY(-50%)",
+      zIndex: 2000,
+      background: dark ? "#444" : "#6a11cb",
+      color: "#fff",
+      border: "none",
+      padding: "10px 15px",
+      borderTopLeftRadius: "8px",
+      borderBottomLeftRadius: "8px",
+      cursor: "pointer",
+      left: rtl ? "unset" : "0", // Mengubah posisi tombol ketika RTL aktif
+      right: rtl ? "0" : "unset", // Mengubah posisi tombol ketika RTL aktif
+    }}
+  >
+    🍔
+  </button>
+)}
+
 
       {/* SIDEBAR */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
