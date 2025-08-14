@@ -5,7 +5,7 @@ import FormPengajuanSurat from "@/components/FormPengajuanSurat";
 import FormCekStatus from "@/components/FormCekStatus";
 
 export default function LayananPage() {
-  const [selectedContent, setSelectedContent] = useState<React.ReactNode | null>(null);
+  const [selectedContent, setSelectedContent] = useState<React.ReactNode | null>(null); // Tipe sudah benar
 
   const openSheet = (content: React.ReactNode) => {
     setSelectedContent(content);
@@ -26,7 +26,7 @@ export default function LayananPage() {
   ];
 
   // Menyimpan index ikon yang aktif
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0); // Tipe state yang lebih spesifik
 
   // Auto slide setiap 3 detik untuk mengganti ikon
   useEffect(() => {
