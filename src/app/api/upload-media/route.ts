@@ -8,16 +8,20 @@ const execPromise = util.promisify(exec);
 
 export async function POST(req: Request) {
   try {
+    // Ambil form data dari request
     const formData = await req.formData();
     const file = formData.get("file") as File;
 
+    // Validasi jika file tidak ada
     if (!file) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
+    // Mengkonversi file menjadi buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    // Direktori penyimpanan file
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
 
     // Pastikan direktori 'uploads' ada
@@ -28,6 +32,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Gagal membuat direktori" }, { status: 500 });
     }
 
+    // Menyimpan file ke direktori yang sudah dibuat
     const filePath = path.join(uploadsDir, file.name);
     await writeFile(filePath, buffer);
 
@@ -35,11 +40,12 @@ export async function POST(req: Request) {
 
     let gifUrl = "";
 
-    // Kalau video → generate thumbnail GIF
+    // Kalau file adalah video → generate thumbnail GIF
     if (file.type.startsWith("video")) {
       const fileNameParts = file.name.split(".");
       const gifName = fileNameParts.length > 1 ? `${fileNameParts[0]}.gif` : `${file.name}.gif`;  // Pastikan ekstensi ada
       const gifPath = path.join(uploadsDir, gifName);
+
       try {
         const command = `ffmpeg -i "${filePath}" -t 3 -vf "fps=10,scale=320:-1" -y "${gifPath}"`;
         await execPromise(command);
