@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import FormTambahBerita from "@/components/FormTambahBerita";
 import BeritaCarousel from "@/components/BeritaCarousel";
 import Link from "next/link";
-import Image from "next/image"; // Impor Image dari next/image
+import Image from "next/image"; // Pastikan menggunakan next/image untuk gambar
 
 // Tentukan tipe untuk berita
 type Artikel = {
@@ -20,7 +20,7 @@ type Artikel = {
 };
 
 export default function Beranda() {
-  const [beritaData, setBeritaData] = useState<Artikel[]>([]);  // Tentukan tipe state
+  const [beritaData, setBeritaData] = useState<Artikel[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,9 +32,7 @@ export default function Beranda() {
       try {
         const res = await fetch("/api/berita");
         if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-        const text = await res.text();
-        if (!text) throw new Error("Response kosong dari server");
-        const data = JSON.parse(text);
+        const data = await res.json();
         setBeritaData(data);
       } catch (err: any) {
         console.error("Gagal mengambil data berita:", err);
@@ -96,23 +94,25 @@ export default function Beranda() {
                 overflow: "hidden",
               }}
             >
-              {/* Ganti <img> dengan Image dari next/image */}
+              {/* Gunakan next/image */}
               <Image
-                src={
-                  berita.mediaType === "video"
-                    ? berita.thumbnail || "https://via.placeholder.com/400x200?text=Video+Preview"
-                    : berita.image || "https://via.placeholder.com/400x200"
-                }
+                src={berita.mediaType === "video"
+                  ? berita.thumbnail || "https://via.placeholder.com/400x200?text=Video+Preview"
+                  : berita.image || "https://via.placeholder.com/400x200"}
                 alt={berita.title}
-                width={400}  // Tentukan ukuran gambar
-                height={200} // Tentukan ukuran gambar
-                style={{ objectFit: "cover" }}
+                width={400}
+                height={200}
+                layout="responsive" // Untuk gambar responsif
+                objectFit="cover" // Gambar tetap terpotong sesuai ukuran
               />
 
               <div style={{ padding: "15px" }}>
                 <h3 style={{ margin: "0 0 10px 0" }}>
-                  <Link href={`/artikel/${berita.slug}`} style={{ textDecoration: "none", color: "#4A3AFF" }}>
-                    {berita.title}
+                  {/* Gunakan Link dengan passHref */}
+                  <Link href={`/artikel/${berita.slug}`} passHref>
+                    <a style={{ textDecoration: "none", color: "#4A3AFF" }}>
+                      {berita.title}
+                    </a>
                   </Link>
                 </h3>
                 <p style={{ fontSize: "14px", color: "#666" }}>
