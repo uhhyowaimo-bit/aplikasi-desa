@@ -1,16 +1,23 @@
-import { AppProvider } from "@/context/AppContext"; // Import AppProvider
-import ClientLayout from "@/components/ClientLayout"; // Import ClientLayout
+"use client";
+import { useState, useEffect } from "react";
+import { useAppContext } from "@/context/AppContext"; // Mengimpor useAppContext
+import ClientLayout from "@/components/ClientLayout"; // Mengimpor ClientLayout
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const { dark } = useAppContext(); // Mengambil status dark mode dari context
+
   return (
     <html lang="id">
       <head>
-        <title>Aplikasi Desa</title> {/* Menambahkan title untuk aplikasi */}
+        <title>Aplikasi Desa</title>
       </head>
-      <body>
-        <AppProvider> {/* Membungkus aplikasi dengan AppProvider */}
-          <ClientLayout>{children}</ClientLayout> {/* Konten halaman akan berada di sini */}
-        </AppProvider>
+      <body
+        style={{
+          backgroundColor: dark ? "#111" : "#fff", // Menyesuaikan latar belakang sesuai dark mode
+          color: dark ? "#fff" : "#111", // Menyesuaikan warna teks sesuai dark mode
+        }}
+      >
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
