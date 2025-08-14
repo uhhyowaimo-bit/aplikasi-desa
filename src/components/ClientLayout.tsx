@@ -2,12 +2,11 @@
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar"; 
 import BottomNav from "@/components/BottomNav"; 
-import BurgerButton from "@/components/BurgerButton"; 
-import { useAppContext } from "@/context/AppContext"; 
 import LoginSheet from "@/components/LoginSheet"; 
+import { useAppContext } from "@/context/AppContext"; 
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { rtl, dark, lang, toggleRtl, toggleDark, toggleLang } = useAppContext(); 
+  const { rtl, dark, toggleRtl, toggleDark, lang } = useAppContext(); 
   const [countdown, setCountdown] = useState(""); 
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -54,13 +53,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <>
+      {/* HEADER */}
       <header
         style={{
           position: "sticky",
           top: 0,
           zIndex: 100,
-          background: "linear-gradient(90deg, #6a11cb, #2575fc)",
-          color: "#fff",
+          background: dark ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
+          color: dark ? "#fff" : "#111",
           padding: "10px 15px",
           borderRadius: "0 0 8px 8px",
           display: "flex",
@@ -68,6 +68,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           justifyContent: "space-between",
         }}
       >
+        {/* Logo & Nama */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <img
             src="/logo.png"
@@ -82,6 +83,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <h3 style={{ margin: 0, fontSize: "20px" }}>Website Desa</h3>
         </div>
 
+        {/* Countdown */}
         <div style={{ textAlign: "right" }}>
           {mounted && (
             <>
@@ -92,6 +94,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </div>
       </header>
 
+      {/* BURGER BUTTON */}
       {!showLogin && !sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(true)}
@@ -101,7 +104,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2000,
-            background: "#6a11cb",
+            background: dark ? "#444" : "#6a11cb",
             color: "#fff",
             border: "none",
             padding: "10px 15px",
@@ -114,8 +117,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </button>
       )}
 
+      {/* SIDEBAR */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
+      {/* MAIN CONTENT */}
       <main
         style={{
           direction: rtl ? "rtl" : "ltr", 
@@ -126,10 +131,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {children}
       </main>
 
+      {/* LOGIN SHEET */}
       {showLogin && <LoginSheet onClose={() => setShowLogin(false)} onLogin={() => setIsLoggedIn(true)} />}
 
+      {/* BOTTOM NAV */}
       <BottomNav />
 
+      {/* LOGOUT BUTTON */}
       {isLoggedIn && (
         <button
           onClick={handleLogout}
