@@ -11,6 +11,16 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    rules: {
+      // Nonaktifkan peringatan untuk penggunaan 'any'
+      "@typescript-eslint/no-explicit-any": "off",
+      // Nonaktifkan peringatan untuk penggunaan <img> di Next.js
+      "@next/next/no-img-element": "off",
+      // Aturan tambahan jika diperlukan
+      "@typescript-eslint/no-unused-vars": ["warn"],  // Mengubah aturan unused-vars menjadi warning
+    },
+  },
 ];
 
 export default eslintConfig;
