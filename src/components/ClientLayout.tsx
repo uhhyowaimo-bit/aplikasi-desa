@@ -1,16 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
-import BottomNav from "@/components/BottomNav";
-import LoginSheet from "@/components/LoginSheet";
-import { useAppContext } from "@/context/AppContext";
+import Sidebar from "@/components/Sidebar"; 
+import BottomNav from "@/components/BottomNav"; 
+import LoginSheet from "@/components/LoginSheet"; 
+import { useAppContext } from "@/context/AppContext"; 
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { rtl, dark, toggleRtl, toggleDark, lang } = useAppContext();
-  const [countdown, setCountdown] = useState("");
+  const { dark, toggleDark, lang } = useAppContext(); 
+  const [countdown, setCountdown] = useState(""); 
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(false); 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const handleLoginOpen = () => {
     setShowLogin(true);
-    setSidebarOpen(false);
+    setSidebarOpen(false); 
   };
 
   const handleLogout = () => {
@@ -95,29 +95,27 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </header>
 
       {/* BURGER BUTTON */}
-{!showLogin && !sidebarOpen && (
-  <button
-    onClick={() => setSidebarOpen(true)}
-    style={{
-      position: "fixed",
-      top: "50%",
-      transform: "translateY(-50%)",
-      zIndex: 2000,
-      background: dark ? "#444" : "#6a11cb",
-      color: "#fff",
-      border: "none",
-      padding: "10px 15px",
-      borderTopLeftRadius: "8px",
-      borderBottomLeftRadius: "8px",
-      cursor: "pointer",
-      left: rtl ? "unset" : "0", // Mengubah posisi tombol ketika RTL aktif
-      right: rtl ? "0" : "unset", // Mengubah posisi tombol ketika RTL aktif
-    }}
-  >
-    🍔
-  </button>
-)}
-
+      {!showLogin && !sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          style={{
+            position: "fixed",
+            right: 0,
+            top: "50%",
+            transform: "translateY(-50%)",
+            zIndex: 2000,
+            background: dark ? "#444" : "#6a11cb",
+            color: "#fff",
+            border: "none",
+            padding: "10px 15px",
+            borderTopLeftRadius: "8px",
+            borderBottomLeftRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          🍔
+        </button>
+      )}
 
       {/* SIDEBAR */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -125,8 +123,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          direction: rtl ? "rtl" : "ltr",
-          backgroundColor: dark ? "#333" : "#fff", // Background abu-abu saat dark mode
+          backgroundColor: dark ? "#333" : "#fff", // Ganti dengan warna abu-abu saat dark mode
           color: dark ? "#fff" : "#111",
         }}
       >
@@ -160,6 +157,24 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           Logout
         </button>
       )}
+
+      {/* DARK MODE TOGGLE */}
+      <button
+        onClick={toggleDark}
+        style={{
+          position: "fixed",
+          bottom: "100px",
+          right: "20px",
+          background: dark ? "#333" : "#fff",
+          color: dark ? "#fff" : "#111",
+          border: "none",
+          padding: "10px 15px",
+          borderRadius: "8px",
+          cursor: "pointer",
+        }}
+      >
+        {dark ? "🌙" : "🌞"} Toggle Dark Mode
+      </button>
     </>
   );
 }
