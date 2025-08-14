@@ -1,161 +1,159 @@
 "use client";
-import { useState, useEffect, useRef } from "react"; // <-- Tambahkan useRef di sini
-import { useAppContext } from "@/context/AppContext"; // Mengimpor useAppContext
-import LoginSheet from "@/components/LoginSheet"; // Sesuaikan path
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useState, useEffect } from "react";
+import Sidebar from "@/components/Sidebar";
+import BottomNav from "@/components/BottomNav";
+import LoginSheet from "@/components/LoginSheet";
+import { useAppContext } from "@/context/AppContext";
 
-export default function Sidebar({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
-  const [showLogin, setShowLogin] = useState(false); // Untuk menampilkan modal LoginSheet
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Status login
-  const sidebarRef = useRef<HTMLDivElement>(null); // <-- Menggunakan useRef
-  const { dark, lang } = useAppContext();
-  const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
-  const [chartData, setChartData] = useState([
-    { day: "Sen", visitors: 0 },
-    { day: "Sel", visitors: 0 },
-    { day: "Rab", visitors: 0 },
-    { day: "Kam", visitors: 0 },
-    { day: "Jum", visitors: 0 },
-    { day: "Min", visitors: 0 },
-  ]);
-  const [selectedColor, setSelectedColor] = useState("#432874"); // Default color
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const { dark, toggleDark, lang } = useAppContext();
+  const [countdown, setCountdown] = useState("");
+  const [mounted, setMounted] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Fungsi untuk menangani klik di luar sidebar dan ESC
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
-        onClose();
-      }
+    setMounted(true);
+    const loginStatus = localStorage.getItem("isLoggedIn");
+    if (loginStatus === "true") {
+      setIsLoggedIn(true);
     }
-
-    function handleEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleEsc);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEsc);
-    };
-  }, [isOpen, onClose]);
-
-  // Mengecek status login saat komponen dimuat
-  useEffect(() => {
-    const loggedInStatus = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedInStatus); // Update status login
   }, []);
 
-  // Fetch statistik pengunjung
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("/api/visitors");
-        const data = await res.json();
-        setStats(data);
-        setChartData((prev) =>
-          prev.map((item) => ({
-            ...item,
-            visitors: Math.floor(Math.random() * 100 + 20),
-          }))
-        );
-      } catch (err) {
-        console.error("Gagal fetch data:", err);
+    const targetDate = new Date("2025-08-17T00:00:00").getTime();
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance <= 0) {
+        setCountdown("Hari Proklamasi Telah Tiba!");
+        clearInterval(interval);
+        return;
       }
-    }
-
-    fetchData();
-    const interval = setInterval(fetchData, 30000); // Refresh data setiap 30 detik
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true); // Set status login ke true
-    localStorage.setItem("isLoggedIn", "true"); // Simpan status login di localStorage
-    setShowLogin(false); // Menutup LoginSheet
+  const handleLoginOpen = () => {
+    setShowLogin(true);
+    setSidebarOpen(false);
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false); // Set status login ke false
-    localStorage.setItem("isLoggedIn", "false"); // Hapus status login di localStorage
-    window.location.reload(); // Menyegarkan halaman setelah logout
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+    window.location.reload();
   };
-
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = e.target.value;
-    setSelectedColor(newColor);
-    // Update global CSS variable
-    document.documentElement.style.setProperty("--primary-color", newColor);
-  };
-
-  if (!isOpen) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        backgroundColor: "rgba(0,0,0,0.5)",
-        zIndex: 1100,
-        display: "flex",
-        justifyContent: "flex-end",
-      }}
-    >
-      <div
-        ref={sidebarRef}
+    <>
+      {/* HEADER */}
+      <header
         style={{
-          height: "100%",
-          width: "300px",
-          background: dark ? "#333" : "#432874", // Dark mode pada sidebar
-          color: "#fff",
-          padding: "20px",
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+          background: dark ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
+          color: dark ? "#fff" : "#111",
+          padding: "10px 15px",
+          borderRadius: "0 0 8px 8px",
           display: "flex",
-          flexDirection: "column",
+          alignItems: "center",
           justifyContent: "space-between",
-          boxShadow: "-3px 0 8px rgba(0,0,0,0.4)",
-          overflow: "hidden",
         }}
       >
-        <h3>⚙️ Pengaturan</h3>
-        <div style={{ marginBottom: "20px" }}>
-          <p>Statistik Pengunjung</p>
-          <p>Hari Ini: <b>{stats.daily}</b></p>
-          <p>Minggu Ini: <b>{stats.weekly}</b></p>
-          <p>Total: <b>{stats.total}</b></p>
-          <ResponsiveContainer width="100%" height={150}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="visitors" stroke="#82ca9d" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div>
-          <button
-            onClick={handleLoginSuccess}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src="/logo.png"
+            alt="Logo Desa"
             style={{
-              backgroundColor: "#5e3ea1",
-              color: "#fff",
-              padding: "12px",
-              borderRadius: "6px",
+              width: "45px",
+              height: "45px",
+              marginRight: "10px",
+              borderRadius: "50%",
             }}
-          >
-            Login
-          </button>
+          />
+          <h3 style={{ margin: 0, fontSize: "20px" }}>Website Desa</h3>
         </div>
-      </div>
-    </div>
+        <div style={{ textAlign: "right" }}>
+          {mounted && (
+            <>
+              <p style={{ margin: 0, fontSize: "14px" }}>Proklamasi Kemerdekaan R.I.</p>
+              <p style={{ margin: 0, fontSize: "14px", fontWeight: "bold" }}>{countdown}</p>
+            </>
+          )}
+        </div>
+      </header>
+
+      {/* BURGER BUTTON */}
+      {!showLogin && !sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          style={{
+            position: "fixed",
+            right: 0,
+            top: "50%",
+            transform: "translateY(-50%)",
+            zIndex: 2000,
+            background: dark ? "#444" : "#6a11cb",
+            color: "#fff",
+            border: "none",
+            padding: "10px 15px",
+            borderTopLeftRadius: "8px",
+            borderBottomLeftRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          🍔
+        </button>
+      )}
+
+      {/* SIDEBAR */}
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* MAIN CONTENT */}
+      <main
+        style={{
+          backgroundColor: dark ? "#333" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          color: dark ? "#fff" : "#111",
+        }}
+      >
+        {children}
+      </main>
+
+      {/* LOGIN SHEET */}
+      {showLogin && <LoginSheet onClose={() => setShowLogin(false)} onLogin={() => setIsLoggedIn(true)} />}
+
+      {/* BOTTOM NAV */}
+      <BottomNav />
+
+      {/* LOGOUT BUTTON */}
+      {isLoggedIn && (
+        <button
+          onClick={handleLogout}
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 100,
+            background: "#f44336",
+            color: "#fff",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          Logout
+        </button>
+      )}
+    </>
   );
 }
