@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
@@ -6,7 +7,7 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark } = useAppContext(); // Hanya menggunakan dark mode, bukan RTL
+  const { dark, toggleDark } = useAppContext();
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -68,7 +69,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           justifyContent: "space-between",
         }}
       >
-        {/* Logo & Nama */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <img
             src="/logo.png"
@@ -82,8 +82,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           />
           <h3 style={{ margin: 0, fontSize: "20px" }}>Website Desa</h3>
         </div>
-
-        {/* Countdown */}
         <div style={{ textAlign: "right" }}>
           {mounted && (
             <>
@@ -123,8 +121,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: dark ? "#333" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          backgroundColor: dark ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
           color: dark ? "#fff" : "#111",
+          padding: "20px", // Tambahkan padding jika diperlukan
         }}
       >
         {children}
