@@ -1,13 +1,17 @@
-"use client";
+import { AppProvider } from "@/context/AppContext"; // Import AppProvider
+import ClientLayout from "@/components/ClientLayout"; // Import ClientLayout
 
-import React from "react";
-
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="id">
+      <head>
+        <title>Aplikasi Desa</title> {/* Menambahkan title untuk aplikasi */}
+      </head>
+      <body>
+        <AppProvider> {/* Membungkus aplikasi dengan AppProvider */}
+          <ClientLayout>{children}</ClientLayout> {/* Konten halaman akan berada di sini */}
+        </AppProvider>
+      </body>
     </html>
   );
-};
-
-export default RootLayout;
+}
