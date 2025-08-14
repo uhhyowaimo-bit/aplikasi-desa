@@ -73,6 +73,14 @@ export default function Sidebar({
     return () => clearInterval(interval);
   }, []);
 
+  // Persist dark mode setting
+  useEffect(() => {
+    const storedDarkMode = localStorage.getItem("darkMode");
+    if (storedDarkMode === "true") {
+      toggleDark(); // Enable dark mode if saved in localStorage
+    }
+  }, [toggleDark]);
+
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
     localStorage.setItem("isLoggedIn", "true");
@@ -83,6 +91,13 @@ export default function Sidebar({
     setIsLoggedIn(false);
     localStorage.setItem("isLoggedIn", "false");
     window.location.reload();
+  };
+
+  // Handle dark mode toggle
+  const handleDarkModeToggle = () => {
+    toggleDark();
+    const currentMode = !dark;
+    localStorage.setItem("darkMode", currentMode.toString()); // Save the mode to localStorage
   };
 
   if (!isOpen) return null;
@@ -118,7 +133,7 @@ export default function Sidebar({
         <div style={{ marginBottom: "20px" }}>
           <h3>🌙 / ☀️</h3>
           <button
-            onClick={toggleDark}
+            onClick={handleDarkModeToggle}
             style={{
               background: "transparent",
               border: "none",
