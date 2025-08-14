@@ -1,8 +1,8 @@
-"use client"; // Place this at the top
+"use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useAppContext } from "@/context/AppContext";
-import LoginSheet from "@/components/LoginSheet";
+import { useAppContext } from "@/context/AppContext"; 
+import LoginSheet from "@/components/LoginSheet"; 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function Sidebar({
@@ -12,10 +12,10 @@ export default function Sidebar({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogin, setShowLogin] = useState(false); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { dark, lang, toggleDark } = useAppContext();
+  const { dark, toggleDark, lang } = useAppContext();
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
     { day: "Sen", visitors: 0 },
@@ -114,13 +114,20 @@ export default function Sidebar({
           transform: "translateX(0)",
         }}
       >
-        {/* Dark Mode Emoji */}
+        {/* Dark Mode Emoji Toggle Button */}
         <div>
           <h3>🌙 / ☀️</h3>
-          <label>
-            <input type="checkbox" checked={dark} onChange={toggleDark} style={{ marginRight: "10px" }} />
-            {dark ? "Dark Mode" : "Light Mode"}
-          </label>
+          <button
+            onClick={toggleDark}
+            style={{
+              background: "transparent",
+              border: "none",
+              fontSize: "2rem",
+              cursor: "pointer",
+            }}
+          >
+            {dark ? "🌙" : "☀️"}
+          </button>
         </div>
 
         {/* Visitor Stats */}
