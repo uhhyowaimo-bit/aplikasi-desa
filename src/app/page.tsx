@@ -1,6 +1,6 @@
 "use client";
-import { useAppContext } from "@/context/AppContext"; // Mengimpor useAppContext
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useAppContext } from "@/context/AppContext";
 
 export default function Page() {
   const { dark } = useAppContext(); // Mengambil status dark mode dari context
