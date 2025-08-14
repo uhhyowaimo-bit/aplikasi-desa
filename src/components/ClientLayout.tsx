@@ -6,7 +6,7 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark } = useAppContext(); // Mengambil status dark mode
+  const { dark, toggleDark } = useAppContext(); // Hanya menggunakan dark mode, bukan RTL
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -123,9 +123,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: dark ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          backgroundColor: dark ? "#333" : "#fff", // Ganti dengan warna abu-abu saat dark mode
           color: dark ? "#fff" : "#111",
-          padding: "20px", // Menambahkan padding untuk memberi jarak dengan tepi
         }}
       >
         {children}
