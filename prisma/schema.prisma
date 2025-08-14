@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Ganti ke "mysql" kalau pakai MySQL
+  url      = env("DATABASE_URL")
+}
+
+model PengajuanSurat {
+  id             Int      @id @default(autoincrement())
+  nama           String
+  nik            String
+  jenisSurat     String
+  alasan         String
+  kodeVerifikasi String   @unique
+  status         String   @default("belum_diterima")
+  createdAt      DateTime @default(now())
+}
+
+model Berita {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  content     String
+  image       String
+  thumbnail   String?   @default("")// <-- WAJIB kalau mau simpan GIF
+  mediaType   String    @default("image")
+  date        String    @default("Belum diisi")
+  author      String    @default("Admin")
+  viewers     Int       @default(0)
+  slug        String    @unique
+  createdAt   DateTime  @default(now())
+}
+
+
