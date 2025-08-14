@@ -1,8 +1,7 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
-import { useAppContext } from "@/context/AppContext"; 
-import LoginSheet from "@/components/LoginSheet"; 
+import { useAppContext } from "@/context/AppContext";
+import LoginSheet from "@/components/LoginSheet"; // Sesuaikan dengan path
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function Sidebar({
@@ -12,10 +11,10 @@ export default function Sidebar({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const [showLogin, setShowLogin] = useState(false); 
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [showLogin, setShowLogin] = useState(false); // Untuk menampilkan modal LoginSheet
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Status login
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { dark, toggleDark, lang } = useAppContext();
+  const { dark, toggleDark } = useAppContext(); // Mengambil status dark mode dan fungsi untuk toggle
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
     { day: "Sen", visitors: 0 },
@@ -27,8 +26,16 @@ export default function Sidebar({
     { day: "Min", visitors: 0 },
   ]);
 
-  // Handle outside click and ESC key
+  // Memastikan mode gelap tetap konsisten setelah refresh
   useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode) {
+      toggleDark(savedDarkMode === "true");
+    }
+  }, [toggleDark]);
+
+  useEffect(() => {
+    // Fungsi untuk menangani klik di luar sidebar dan ESC
     function handleClickOutside(e: MouseEvent) {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
         onClose();
@@ -50,7 +57,7 @@ export default function Sidebar({
     };
   }, [isOpen, onClose]);
 
-  // Fetch visitor stats
+  // Fetch statistik pengunjung
   useEffect(() => {
     async function fetchData() {
       try {
@@ -64,42 +71,28 @@ export default function Sidebar({
           }))
         );
       } catch (err) {
-        console.error("Failed to fetch data:", err);
+        console.error("Gagal fetch data:", err);
       }
     }
 
     fetchData();
-    const interval = setInterval(fetchData, 30000);
+    const interval = setInterval(fetchData, 30000); // Refresh data setiap 30 detik
     return () => clearInterval(interval);
   }, []);
 
-  // Persist dark mode setting
-  useEffect(() => {
-    const storedDarkMode = localStorage.getItem("darkMode");
-    if (storedDarkMode === "true") {
-      toggleDark(); // Enable dark mode if saved in localStorage
-    }
-  }, [toggleDark]);
-
   const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true");
-    setShowLogin(false);
+    setIsLoggedIn(true); // Set status login ke true
+    localStorage.setItem("isLoggedIn", "true"); // Simpan status login di localStorage
+    setShowLogin(false); // Menutup LoginSheet
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.setItem("isLoggedIn", "false");
-    window.location.reload();
+    setIsLoggedIn(false); // Set status login ke false
+    localStorage.setItem("isLoggedIn", "false"); // Hapus status login di localStorage
+    window.location.reload(); // Menyegarkan halaman setelah logout
   };
 
-  // Handle dark mode toggle
-  const handleDarkModeToggle = () => {
-    toggleDark();
-    const currentMode = !dark;
-    localStorage.setItem("darkMode", currentMode.toString()); // Save the mode to localStorage
-  };
-
+  // Pastikan untuk menambahkan return null jika sidebar tidak terbuka
   if (!isOpen) return null;
 
   return (
@@ -118,61 +111,60 @@ export default function Sidebar({
         style={{
           height: "100%",
           width: "300px",
-          background: dark ? "#333" : "#432874", 
+          background: dark ? "#333" : "#432874", // Menggunakan warna gelap atau terang sesuai mode
           color: "#fff",
           padding: "20px",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start", // Align top for stats and chart
+          justifyContent: "space-between",
           boxShadow: "-3px 0 8px rgba(0,0,0,0.4)",
           overflow: "hidden",
-          transform: "translateX(0)",
         }}
       >
-        {/* Dark Mode Emoji Toggle Button */}
-        <div style={{ marginBottom: "20px" }}>
-          <h3>🌙 / ☀️</h3>
-          <button
-            onClick={handleDarkModeToggle}
-            style={{
-              background: "transparent",
-              border: "none",
-              fontSize: "2rem",
-              cursor: "pointer",
-            }}
-          >
-            {dark ? "🌙" : "☀️"}
-          </button>
+        {/* Konten sidebar */}
+        <div>
+          <h2>⚙️ Pengaturan</h2>
+
+          {/* Dark Mode Toggle */}
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={dark}
+                onChange={() => {
+                  toggleDark(!dark); // Toggle dark mode
+                  localStorage.setItem("darkMode", !dark ? "true" : "false"); // Simpan pilihan mode
+                }}
+              />{" "}
+              {dark ? "🌙 Mode Gelap" : "🌞 Mode Terang"}
+            </label>
+          </div>
+
+          {/* Statistik Pengunjung */}
+          <h3 style={{ fontSize: "16px", marginTop: "20px" }}>📈 Statistik Pengunjung</h3>
+          <p>Hari Ini: <b>{stats.daily}</b></p>
+          <p>Minggu Ini: <b>{stats.weekly}</b></p>
+          <p>Total: <b>{stats.total}</b></p>
+          <div style={{ marginTop: "10px" }}>
+            <ResponsiveContainer width="100%" height={150}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="visitors" stroke="#82ca9d" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        {/* Visitor Stats */}
-        <h3 style={{ fontSize: "16px", marginTop: "20px" }}>
-          📈 {lang === "id" ? "Statistik Pengunjung" : "Visitor Stats"}
-        </h3>
-        <p>Hari Ini: <b>{stats.daily}</b></p>
-        <p>Minggu Ini: <b>{stats.weekly}</b></p>
-        <p>Total: <b>{stats.total}</b></p>
-
-        <div style={{ marginTop: "10px", flex: 1 }}>
-          <ResponsiveContainer width="100%" height={150}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="visitors" stroke="#82ca9d" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Login/Logout Button */}
+        {/* Tombol Login/Logout */}
         <div>
           {!isLoggedIn ? (
             <button
               onClick={() => setShowLogin(true)}
               style={{
                 color: "#fff",
-                textDecoration: "none",
                 display: "block",
                 padding: "12px",
                 background: "#5e3ea1",
@@ -188,7 +180,6 @@ export default function Sidebar({
               onClick={handleLogout}
               style={{
                 color: "#fff",
-                textDecoration: "none",
                 display: "block",
                 padding: "12px",
                 background: "#e74c3c",
@@ -201,14 +192,14 @@ export default function Sidebar({
             </button>
           )}
 
-          {/* LoginSheet */}
+          {/* LoginSheet hanya muncul saat showLogin true */}
           {showLogin && (
             <LoginSheet
               onClose={() => {
                 setShowLogin(false);
-                onClose();
+                onClose(); // Menutup sidebar ketika login sheet aktif
               }}
-              onLogin={handleLoginSuccess}
+              onLogin={handleLoginSuccess} // Menandakan login berhasil
             />
           )}
         </div>
