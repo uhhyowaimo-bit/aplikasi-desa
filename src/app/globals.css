@@ -1,17 +1,31 @@
-/* Style untuk Light Mode */
+/* Global Styles */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 body.light-mode {
   background-color: #fff;
   color: #111;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Style untuk Dark Mode */
 body.dark-mode {
   background-color: #111;
   color: #fff;
-  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: inherit; /* Agar warna link mengikuti mode */
+}
+
+button {
+  background-color: #6a11cb; /* Warna default untuk button */
+  color: #fff;
+}
+
+button.dark-mode {
+  background-color: #444; /* Button untuk dark mode */
 }
 
 header {
-  background-color: #333;
+  transition: background 0.3s ease, color 0.3s ease;
 }
