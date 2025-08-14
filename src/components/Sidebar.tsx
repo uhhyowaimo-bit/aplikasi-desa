@@ -108,14 +108,14 @@ export default function Sidebar({
           padding: "20px",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
+          justifyContent: "flex-start", // Align top for stats and chart
           boxShadow: "-3px 0 8px rgba(0,0,0,0.4)",
           overflow: "hidden",
           transform: "translateX(0)",
         }}
       >
         {/* Dark Mode Emoji Toggle Button */}
-        <div>
+        <div style={{ marginBottom: "20px" }}>
           <h3>🌙 / ☀️</h3>
           <button
             onClick={toggleDark}
@@ -137,7 +137,8 @@ export default function Sidebar({
         <p>Hari Ini: <b>{stats.daily}</b></p>
         <p>Minggu Ini: <b>{stats.weekly}</b></p>
         <p>Total: <b>{stats.total}</b></p>
-        <div style={{ marginTop: "10px" }}>
+
+        <div style={{ marginTop: "10px", flex: 1 }}>
           <ResponsiveContainer width="100%" height={150}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
