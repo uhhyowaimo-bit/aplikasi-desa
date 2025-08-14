@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 
 export default function StatusPage() {
-  const [kode, setKode] = useState("");
-  const [hasil, setHasil] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [kode, setKode] = useState<string>("");  // Tentukan tipe string untuk kode
+  const [hasil, setHasil] = useState<{ error?: string, nama?: string, jenisSurat?: string, status?: string, createdAt?: string } | null>(null);  // Tentukan tipe hasil dengan properti yang sesuai
+  const [loading, setLoading] = useState<boolean>(false);  // Tipe loading ditentukan sebagai boolean
 
   const handleCek = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +55,7 @@ export default function StatusPage() {
             <>
               <p><strong>Nama:</strong> {hasil.nama}</p>
               <p><strong>Jenis Surat:</strong> {hasil.jenisSurat}</p>
-              <p><strong>Status:</strong> {statusMap[hasil.status] || hasil.status}</p>
+              <p><strong>Status:</strong> {statusMap[hasil.status as keyof typeof statusMap] || hasil.status}</p>
               <p><strong>Diajukan pada:</strong> {new Date(hasil.createdAt).toLocaleString()}</p>
             </>
           )}
