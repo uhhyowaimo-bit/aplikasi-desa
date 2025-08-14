@@ -1,10 +1,18 @@
 "use client";
 import React, { useState } from "react";
 
+interface HasilStatus {
+  error?: string;
+  nama?: string;
+  jenisSurat?: string;
+  status?: string;
+  createdAt?: string;
+}
+
 export default function FormCekStatus() {
-  const [kode, setKode] = useState("");
-  const [hasil, setHasil] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [kode, setKode] = useState<string>(""); // Tipe string untuk kode
+  const [hasil, setHasil] = useState<HasilStatus | null>(null); // Tipe state lebih spesifik
+  const [loading, setLoading] = useState<boolean>(false); // Tipe boolean untuk loading
 
   const handleCek = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,8 +76,8 @@ export default function FormCekStatus() {
             <>
               <p><strong>Nama:</strong> {hasil.nama}</p>
               <p><strong>Jenis Surat:</strong> {hasil.jenisSurat}</p>
-              <p><strong>Status:</strong> {statusMap[hasil.status] || hasil.status}</p>
-              <p><strong>Diajukan:</strong> {new Date(hasil.createdAt).toLocaleString()}</p>
+              <p><strong>Status:</strong> {statusMap[hasil.status || ""] || hasil.status}</p>
+              <p><strong>Diajukan:</strong> {hasil.createdAt ? new Date(hasil.createdAt).toLocaleString() : "N/A"}</p>
             </>
           )}
         </div>
