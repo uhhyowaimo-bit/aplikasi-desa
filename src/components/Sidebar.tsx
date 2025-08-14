@@ -15,7 +15,7 @@ export default function Sidebar({
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { dark, lang, toggleDark, toggleLang } = useAppContext();
+  const { dark, lang, toggleDark } = useAppContext();
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
     { day: "Sen", visitors: 0 },
@@ -26,7 +26,6 @@ export default function Sidebar({
     { day: "Sab", visitors: 0 },
     { day: "Min", visitors: 0 },
   ]);
-  const [selectedColor, setSelectedColor] = useState("#432874");
 
   // Handle outside click and ESC key
   useEffect(() => {
@@ -86,12 +85,6 @@ export default function Sidebar({
     window.location.reload();
   };
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = e.target.value;
-    setSelectedColor(newColor);
-    document.documentElement.style.setProperty("--primary-color", newColor);
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -110,7 +103,7 @@ export default function Sidebar({
         style={{
           height: "100%",
           width: "300px",
-          background: "#432874",
+          background: dark ? "#333" : "#432874", // Background color based on dark mode
           color: "#fff",
           padding: "20px",
           display: "flex",
@@ -121,35 +114,16 @@ export default function Sidebar({
           transform: "translateX(0)",
         }}
       >
-        {/* Color Palette */}
-        <div>
-          <h3>Choose Color Palette</h3>
-          <input
-            type="color"
-            value={selectedColor}
-            onChange={handleColorChange}
-            style={{ padding: "5px", cursor: "pointer" }}
-          />
-        </div>
-
         {/* Sidebar Content */}
         <div style={{ flex: 1, overflowY: "auto", marginBottom: "20px" }}>
           <h2>⚙️ {lang === "id" ? "Pengaturan" : "Settings"}</h2>
+          
+          {/* Dark Mode Toggle */}
           <div>
             <label>
-              <input type="checkbox" checked={dark} onChange={toggleDark} /> Dark Mode
+              <input type="checkbox" checked={dark} onChange={toggleDark} />{" "}
+              {dark ? "🌙" : "☀️"} {lang === "id" ? "Mode Gelap" : "Dark Mode"}
             </label>
-          </div>
-          <div>
-            Translate:
-            <button onClick={toggleLang} style={{ marginLeft: "8px" }}>
-              {lang.toUpperCase()}
-            </button>
-          </div>
-          <div>
-            <a href="/help" style={{ color: "#fff", textDecoration: "underline" }}>
-              ❓ {lang === "id" ? "Bantuan" : "Help"}
-            </a>
           </div>
 
           <h3 style={{ fontSize: "16px", marginTop: "20px" }}>
