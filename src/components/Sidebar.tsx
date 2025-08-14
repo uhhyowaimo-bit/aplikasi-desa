@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react"; // <-- Tambahkan useRef di sini
 import { useAppContext } from "@/context/AppContext"; // Mengimpor useAppContext
 import LoginSheet from "@/components/LoginSheet"; // Sesuaikan path
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -13,7 +13,7 @@ export default function Sidebar({
 }) {
   const [showLogin, setShowLogin] = useState(false); // Untuk menampilkan modal LoginSheet
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Status login
-  const sidebarRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null); // <-- Menggunakan useRef
   const { dark, lang } = useAppContext();
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
