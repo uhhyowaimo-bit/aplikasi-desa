@@ -1,6 +1,15 @@
+/* Style untuk Light Mode */
+body.light-mode {
+  background-color: #fff;
+  color: #111;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Style untuk Dark Mode */
 body.dark-mode {
   background-color: #111;
   color: #fff;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 header {
