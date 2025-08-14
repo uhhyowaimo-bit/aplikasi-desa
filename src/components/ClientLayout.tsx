@@ -124,7 +124,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <main
         style={{
           direction: rtl ? "rtl" : "ltr",
-          backgroundColor: dark ? "#111" : "#fff",
+          backgroundColor: dark ? "#333" : "#fff", // Ganti dengan warna abu-abu saat dark mode
           color: dark ? "#fff" : "#111",
         }}
       >
