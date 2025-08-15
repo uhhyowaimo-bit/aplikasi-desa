@@ -1,13 +1,13 @@
 // src/context/AppContext.tsx
-"use client"; // Pastikan ini ada
+
+"use client"; // Pastikan kita menggunakan client-side
 
 import React, { createContext, useState, useContext, useEffect } from "react";
 
+// Membuat konteks untuk dark mode
 const AppContext = createContext(null);
 
-export const useAppContext = () => useContext(AppContext);
-
-export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+export function AppProvider({ children }) {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -18,9 +18,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const toggleDark = () => {
-    const newDark = !dark;
-    setDark(newDark);
-    localStorage.setItem("darkMode", newDark ? "true" : "false");
+    setDark((prevDark) => {
+      const newDark = !prevDark;
+      localStorage.setItem("darkMode", newDark.toString());
+      return newDark;
+    });
   };
 
   return (
@@ -28,4 +30,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </AppContext.Provider>
   );
-};
+}
+
+export function useAppContext() {
+  return useContext(AppContext);
+}
