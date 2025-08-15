@@ -76,6 +76,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          flexDirection: "row",
         }}
       >
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -130,9 +131,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: darkMode ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          backgroundColor: darkMode ? "#111" : "#fff",
           color: darkMode ? "#fff" : "#111",
-          padding: "20px", // Tambahkan padding jika diperlukan
+          padding: "20px", // Added some padding for mobile
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         {children}
