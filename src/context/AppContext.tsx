@@ -1,3 +1,5 @@
+"use client"; // Menandakan bahwa file ini untuk sisi-klien
+
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
 // Tipe untuk Context
