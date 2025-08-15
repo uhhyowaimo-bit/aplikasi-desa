@@ -1,27 +1,30 @@
+// src/components/ClientLayout.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import LoginSheet from "@/components/LoginSheet";
-import { useAppContext } from "@/context/AppContext";
+import { useAppContext } from "@/context/AppContext"; // Pastikan import dengan benar
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext();
+  const { dark, toggleDark } = useAppContext(); // Memastikan dark dan toggleDark diambil dari context
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Perbaikan: useEffect dipanggil tanpa kondisi
   useEffect(() => {
     setMounted(true);
     const loginStatus = localStorage.getItem("isLoggedIn");
     if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
-  }, []); // useEffect dipanggil hanya sekali ketika komponen dipasang (mount)
+  }, []);
+
+  if (!mounted) return null; // Menghindari kesalahan SSR
 
   useEffect(() => {
     const targetDate = new Date("2025-08-17T00:00:00").getTime();
@@ -40,7 +43,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
     }, 1000);
     return () => clearInterval(interval);
-  }, []); // useEffect dipanggil hanya sekali ketika komponen dipasang (mount)
+  }, []);
 
   const handleLoginOpen = () => {
     setShowLogin(true);
