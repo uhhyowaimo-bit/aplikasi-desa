@@ -1,19 +1,21 @@
 "use client";
 
-import { useState, useEffect, FC } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useAppContext } from "@/context/AppContext"; // Mengimpor useAppContext
+import LoginSheet from "@/components/LoginSheet"; // Sesuaikan path
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import LoginSheet from "@/components/LoginSheet"; // Import LoginSheet
 
-interface SidebarProps {
+export default function Sidebar({
+  isOpen,
+  onClose,
+}: {
   isOpen: boolean;
   onClose: () => void;
-  setDarkMode: (value: boolean) => void; // Terima props setDarkMode
-  isLoggedIn: boolean;
-  setShowLogin: (value: boolean) => void;
-}
-
-const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, setShowLogin }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+}) {
+  const [showLogin, setShowLogin] = useState(false); // Untuk menampilkan modal LoginSheet
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Status login
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const { dark, toggleDark } = useAppContext(); // Mengambil status dark mode dan fungsi untuk toggle
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
     { day: "Sen", visitors: 0 },
@@ -25,16 +27,43 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
     { day: "Min", visitors: 0 },
   ]);
 
+  // Menggunakan state untuk mengelola mode gelap
+  const [isDarkMode, setIsDarkMode] = useState(dark);
+
+  useEffect(() => {
+    // Fungsi untuk menangani klik di luar sidebar dan ESC
+    function handleClickOutside(e: MouseEvent) {
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    }
+
+    function handleEsc(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEsc);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [isOpen, onClose]);
+
+  // Fetch statistik pengunjung
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await fetch("/api/visitors");
         const data = await res.json();
-        setStats(data); 
+        setStats(data);
         setChartData((prev) =>
           prev.map((item) => ({
             ...item,
-            visitors: Math.floor(Math.random() * 100 + 20), 
+            visitors: Math.floor(Math.random() * 100 + 20),
           }))
         );
       } catch (err) {
@@ -43,28 +72,23 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
     }
 
     fetchData();
-    const interval = setInterval(fetchData, 30000); // Refresh every 30 seconds
+    const interval = setInterval(fetchData, 30000); // Refresh data setiap 30 detik
     return () => clearInterval(interval);
   }, []);
 
-  // Dark mode effect
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }, [isDarkMode]);
-
-  const handleLogout = () => {
-    setIsDarkMode(false);
-    setDarkMode(false); // Update global dark mode state
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.reload();
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true); // Set status login ke true
+    setShowLogin(false); // Menutup LoginSheet
   };
 
-  if (!isOpen) return null; // Do not render sidebar if not open
+  const handleLogout = () => {
+    setIsLoggedIn(false); // Set status login ke false
+    setShowLogin(false); // Menutup LoginSheet jika masih terbuka
+    window.location.reload(); // Menyegarkan halaman setelah logout
+  };
+
+  // Pastikan untuk menambahkan return null jika sidebar tidak terbuka
+  if (!isOpen) return null;
 
   return (
     <div
@@ -78,10 +102,11 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
       }}
     >
       <div
+        ref={sidebarRef}
         style={{
           height: "100%",
           width: "300px",
-          background: isDarkMode ? "#333" : "#432874",
+          background: isDarkMode ? "#333" : "#432874", // Menggunakan warna gelap atau terang sesuai mode
           color: "#fff",
           padding: "20px",
           display: "flex",
@@ -91,47 +116,46 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
           overflow: "hidden",
         }}
       >
-        {/* Dark mode toggle */}
-        <button
-          onClick={() => {
-            setIsDarkMode(!isDarkMode);
-            setDarkMode(!isDarkMode); // Update global dark mode state
-          }}
-          style={{
-            fontSize: "24px",
-            background: "none",
-            border: "none",
-            color: "#fff",
-            cursor: "pointer",
-          }}
-        >
-          {isDarkMode ? "🌙" : "🌞"}
-        </button>
+        {/* Dark Mode Toggle */}
+        <div>
+          <h2>⚙️ Pengaturan</h2>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={isDarkMode}
+                onChange={() => {
+                  setIsDarkMode(!isDarkMode); // Toggle dark mode
+                  toggleDark(); // Toggle dark mode globally
+                }}
+              />{" "}
+              {isDarkMode ? "🌙 Mode Gelap" : "🌞 Mode Terang"}
+            </label>
+          </div>
 
-        {/* Statistik Pengunjung */}
-        <h3>📈 Statistik Pengunjung</h3>
-        <p>Hari Ini: <b>{stats.daily}</b></p>
-        <p>Minggu Ini: <b>{stats.weekly}</b></p>
-        <p>Total: <b>{stats.total}</b></p>
-
-        {/* Grafik Pengunjung */}
-        <div style={{ marginTop: "10px" }}>
-          <ResponsiveContainer width="100%" height={150}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="visitors" stroke="#82ca9d" />
-            </LineChart>
-          </ResponsiveContainer>
+          {/* Statistik Pengunjung */}
+          <h3 style={{ fontSize: "16px", marginTop: "20px" }}>📈 Statistik Pengunjung</h3>
+          <p>Hari Ini: <b>{stats.daily}</b></p>
+          <p>Minggu Ini: <b>{stats.weekly}</b></p>
+          <p>Total: <b>{stats.total}</b></p>
+          <div style={{ marginTop: "10px" }}>
+            <ResponsiveContainer width="100%" height={150}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="visitors" stroke="#82ca9d" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        {/* Login/Logout */}
+        {/* Tombol Login/Logout */}
         <div>
           {!isLoggedIn ? (
             <button
-              onClick={() => setShowLogin(true)} // Show Login Form
+              onClick={() => setShowLogin(true)}
               style={{
                 color: "#fff",
                 display: "block",
@@ -160,20 +184,19 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
               🚪 Logout
             </button>
           )}
-        </div>
 
-        {/* LoginSheet */}
-        {setShowLogin && (
-          <LoginSheet
-            onClose={() => {
-              setShowLogin(false);
-              onClose(); // Close sidebar after login
-            }}
-            onLogin={() => { setIsLoggedIn(true); }} // Handle login success
-          />
-        )}
+          {/* LoginSheet hanya muncul saat showLogin true */}
+          {showLogin && (
+            <LoginSheet
+              onClose={() => {
+                setShowLogin(false);
+                onClose(); // Menutup sidebar ketika login sheet aktif
+              }}
+              onLogin={handleLoginSuccess} // Menandakan login berhasil
+            />
+          )}
+        </div>
       </div>
     </div>
   );
-};
-export default Sidebar;
+}
