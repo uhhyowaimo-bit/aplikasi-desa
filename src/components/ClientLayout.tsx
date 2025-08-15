@@ -1,164 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
-import BottomNav from "@/components/BottomNav";
-import LoginSheet from "@/components/LoginSheet";
-import { useAppContext } from "@/context/AppContext";
+import { useAppContext } from "@/context/AppContext"; // Import context dari AppContext
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark } = useAppContext() || {}; // Ambil 'dark' dari context
-  const [countdown, setCountdown] = useState(""); 
-  const [mounted, setMounted] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { dark, toggleDark } = useAppContext(); // Ambil `dark` dan `toggleDark` dari context
+  const [mounted, setMounted] = useState(false); // Untuk memastikan komponen sudah dimuat
 
   useEffect(() => {
-    setMounted(true); // Pastikan komponen sudah terpasang
-  }, []); 
-
-  useEffect(() => {
-    const targetDate = new Date("2025-08-17T00:00:00").getTime();
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance <= 0) {
-        setCountdown("Hari Proklamasi Telah Tiba!");
-        clearInterval(interval);
-        return;
-      }
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
-    }, 1000);
-    return () => clearInterval(interval);
+    setMounted(true); // Menandakan komponen sudah dimuat
   }, []);
 
-  useEffect(() => {
-    const loginStatus = localStorage.getItem("isLoggedIn");
-    if (loginStatus === "true") {
-      setIsLoggedIn(true);
-    }
-  }, []); 
-
-  if (!mounted) return null; // Jangan render komponen jika belum dimuat
-
-  useEffect(() => {
-  const savedDarkMode = localStorage.getItem("darkMode");
-  if (savedDarkMode === "true") {
-    toggleDark(true);
-  } else {
-    toggleDark(false);
-  }
-}, [toggleDark]);
+  if (!mounted) return null; // Jangan render jika komponen belum dimuat
 
   return (
-    <>
-      {/* HEADER */}
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          background: dark ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
-          color: dark ? "#fff" : "#111",
-          padding: "10px 15px",
-          borderRadius: "0 0 8px 8px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <img
-            src="/logo.png"
-            alt="Logo Desa"
-            style={{
-              width: "45px",
-              height: "45px",
-              marginRight: "10px",
-              borderRadius: "50%",
-            }}
-          />
-          <h3 style={{ margin: 0, fontSize: "20px" }}>Website Desa</h3>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          {mounted && (
-            <>
-              <p style={{ margin: 0, fontSize: "14px" }}>Proklamasi Kemerdekaan R.I.</p>
-              <p style={{ margin: 0, fontSize: "14px", fontWeight: "bold" }}>{countdown}</p>
-            </>
-          )}
-        </div>
-      </header>
-
-      {/* BURGER BUTTON */}
-      {!showLogin && !sidebarOpen && (
-        <button
-          onClick={() => setSidebarOpen(true)}
-          style={{
-            position: "fixed",
-            right: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 2000,
-            background: dark ? "#444" : "#6a11cb",
-            color: "#fff",
-            border: "none",
-            padding: "10px 15px",
-            borderTopLeftRadius: "8px",
-            borderBottomLeftRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          🍔
-        </button>
-      )}
-
-      {/* SIDEBAR */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-      {/* MAIN CONTENT */}
-      <main
-        style={{
-          backgroundColor: dark ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
-          color: dark ? "#fff" : "#111",
-          padding: "20px", // Tambahkan padding jika diperlukan
-        }}
-      >
-        {children}
-      </main>
-
-      {/* LOGIN SHEET */}
-      {showLogin && <LoginSheet onClose={() => setShowLogin(false)} onLogin={() => setIsLoggedIn(true)} />}
-
-      {/* BOTTOM NAV */}
-      <BottomNav />
-
-      {/* LOGOUT BUTTON */}
-      {isLoggedIn && (
-        <button
-          onClick={handleLogout}
-          style={{
-            position: "fixed",
-            bottom: "20px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 100,
-            background: "#f44336",
-            color: "#fff",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          Logout
-        </button>
-      )}
-    </>
+    <div
+      style={{
+        backgroundColor: dark ? "#111" : "#fff", // Mode gelap
+        color: dark ? "#fff" : "#111", // Warna teks
+        height: "100vh", // Mengisi layar
+        padding: "20px", // Padding
+      }}
+    >
+      <h1>Selamat datang di aplikasi dengan Dark Mode!</h1>
+      <button onClick={() => toggleDark(!dark)}>
+        {dark ? "Matikan Mode Gelap" : "Aktifkan Mode Gelap"}
+      </button>
+      <div>{children}</div>
+    </div>
   );
 }
