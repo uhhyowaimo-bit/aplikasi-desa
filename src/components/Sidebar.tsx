@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import { useAppContext } from "@/context/AppContext"; // Mengimpor useAppContext
 import LoginSheet from "@/components/LoginSheet"; // Sesuaikan path
@@ -26,13 +27,8 @@ export default function Sidebar({
     { day: "Min", visitors: 0 },
   ]);
 
-  // Memastikan mode gelap tetap konsisten setelah refresh
-  useEffect(() => {
-    const savedDarkMode = localStorage.getItem("darkMode");
-    if (savedDarkMode === "true") {
-      toggleDark(); // Jika ada, toggle mode gelap
-    }
-  }, [toggleDark]);
+  // Menggunakan state untuk mengelola mode gelap
+  const [isDarkMode, setIsDarkMode] = useState(dark);
 
   useEffect(() => {
     // Fungsi untuk menangani klik di luar sidebar dan ESC
@@ -82,13 +78,12 @@ export default function Sidebar({
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true); // Set status login ke true
-    localStorage.setItem("isLoggedIn", "true"); // Simpan status login di localStorage
     setShowLogin(false); // Menutup LoginSheet
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false); // Set status login ke false
-    localStorage.setItem("isLoggedIn", "false"); // Hapus status login di localStorage
+    setShowLogin(false); // Menutup LoginSheet jika masih terbuka
     window.location.reload(); // Menyegarkan halaman setelah logout
   };
 
@@ -111,7 +106,7 @@ export default function Sidebar({
         style={{
           height: "100%",
           width: "300px",
-          background: dark ? "#333" : "#432874", // Menggunakan warna gelap atau terang sesuai mode
+          background: isDarkMode ? "#333" : "#432874", // Menggunakan warna gelap atau terang sesuai mode
           color: "#fff",
           padding: "20px",
           display: "flex",
@@ -128,13 +123,13 @@ export default function Sidebar({
             <label>
               <input
                 type="checkbox"
-                checked={dark}
+                checked={isDarkMode}
                 onChange={() => {
-                  toggleDark(); // Toggle dark mode
-                  localStorage.setItem("darkMode", !dark ? "true" : "false"); // Simpan mode
+                  setIsDarkMode(!isDarkMode); // Toggle dark mode
+                  toggleDark(); // Toggle dark mode globally
                 }}
               />{" "}
-              {dark ? "🌙 Mode Gelap" : "🌞 Mode Terang"}
+              {isDarkMode ? "🌙 Mode Gelap" : "🌞 Mode Terang"}
             </label>
           </div>
 
