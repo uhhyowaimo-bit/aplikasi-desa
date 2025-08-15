@@ -1,22 +1,25 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
-import BottomNav from "@/components/BottomNav";
-import LoginSheet from "@/components/LoginSheet";
-import { useAppContext } from "@/context/AppContext";
+import Sidebar from "@/components/Sidebar"; 
+import BottomNav from "@/components/BottomNav"; 
+import LoginSheet from "@/components/LoginSheet"; 
+import { useAppContext } from "@/context/AppContext"; 
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark } = useAppContext() || {}; // Ambil 'dark' dari context
+  const { rtl, dark, toggleRtl, toggleDark, lang } = useAppContext(); 
   const [countdown, setCountdown] = useState(""); 
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(false); 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setMounted(true); // Pastikan komponen sudah terpasang
-  }, []); // Tidak ada kondisi atau variabel yang bergantung
+    setMounted(true);
+    const loginStatus = localStorage.getItem("isLoggedIn");
+    if (loginStatus === "true") {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
     const targetDate = new Date("2025-08-17T00:00:00").getTime();
@@ -35,20 +38,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
     }, 1000);
     return () => clearInterval(interval);
-  }, []); // Tidak ada kondisi atau variabel yang bergantung
+  }, []);
 
-  useEffect(() => {
-    const loginStatus = localStorage.getItem("isLoggedIn");
-    if (loginStatus === "true") {
-      setIsLoggedIn(true);
-    }
-  }, []); // Tidak ada kondisi atau variabel yang bergantung
+  const handleLoginOpen = () => {
+    setShowLogin(true);
+    setSidebarOpen(false); 
+  };
 
-  useEffect(() => {
-    toggleDark(false); // Hapus penggunaan localStorage dan langsung set mode terang
-  }, [toggleDark]); // Pastikan ini tidak dipanggil kondisional
-
-  if (!mounted) return null; // Jangan render komponen jika belum dimuat
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+    window.location.reload();
+  };
 
   return (
     <>
@@ -67,6 +68,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           justifyContent: "space-between",
         }}
       >
+        {/* Logo & Nama */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <img
             src="/logo.png"
@@ -80,6 +82,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           />
           <h3 style={{ margin: 0, fontSize: "20px" }}>Website Desa</h3>
         </div>
+
+        {/* Countdown */}
         <div style={{ textAlign: "right" }}>
           {mounted && (
             <>
@@ -119,9 +123,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: dark ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          direction: rtl ? "rtl" : "ltr", 
+          backgroundColor: dark ? "#111" : "#fff", 
           color: dark ? "#fff" : "#111",
-          padding: "20px", // Tambahkan padding jika diperlukan
         }}
       >
         {children}
