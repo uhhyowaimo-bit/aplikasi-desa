@@ -12,8 +12,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [darkMode, setDarkMode] = useState(dark); // Local state for dark mode, initialize from context
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State for login status
+  const [darkMode, setDarkMode] = useState(false); // Local state for dark mode
 
   useEffect(() => {
     setMounted(true);
@@ -22,7 +22,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setIsLoggedIn(true);
     }
 
-    // Auto-set dark mode based on system preference
     const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setDarkMode(systemPreference); // Set dark mode based on system preference
   }, []);
@@ -34,26 +33,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       document.body.classList.remove("dark");
     }
   }, [darkMode]);
-
-  // Countdown logic
-  useEffect(() => {
-    const targetDate = new Date("2025-08-17T00:00:00").getTime();
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance <= 0) {
-        setCountdown("Hari Proklamasi Telah Tiba!");
-        clearInterval(interval);
-        return;
-      }
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleLoginOpen = () => {
     setShowLogin(true);
