@@ -1,8 +1,8 @@
-"use client"; // Tambahkan ini di bagian paling atas file
+// src/context/AppContext.tsx
+"use client"; // Pastikan ini ada
 
 import React, { createContext, useState, useContext, useEffect } from "react";
 
-// Rest of your AppContext code...
 const AppContext = createContext(null);
 
 export const useAppContext = () => useContext(AppContext);
