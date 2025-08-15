@@ -7,7 +7,7 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark } = useAppContext(); // Ambil 'dark' dari context
+  const { dark, toggleDark } = useAppContext() || {}; // Ambil 'dark' dari context
   const [countdown, setCountdown] = useState(""); 
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -45,6 +45,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, []); 
 
   if (!mounted) return null; // Jangan render komponen jika belum dimuat
+
+  useEffect(() => {
+  const savedDarkMode = localStorage.getItem("darkMode");
+  if (savedDarkMode === "true") {
+    toggleDark(true);
+  } else {
+    toggleDark(false);
+  }
+}, [toggleDark]);
 
   return (
     <>
