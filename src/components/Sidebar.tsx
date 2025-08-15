@@ -2,6 +2,7 @@
 
 import { useState, useEffect, FC } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import LoginSheet from "@/components/LoginSheet"; // Pastikan LoginSheet diimpor
 
 interface SidebarProps {
   isOpen: boolean;
@@ -56,6 +57,18 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
     }
   }, [isDarkMode]);
 
+  // Fungsi logout
+  const handleLogout = () => {
+    setIsDarkMode(false);
+    setDarkMode(false); // Update global dark mode state
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload(); // Refresh the page after logout
+  };
+
+  // Tidak merender sidebar jika tidak terbuka
+  if (!isOpen) return null;
+
   return (
     <div
       style={{
@@ -81,11 +94,11 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
           overflow: "hidden",
         }}
       >
-        {/* Dark Mode Toggle */}
+        {/* Dark mode toggle */}
         <button
           onClick={() => {
             setIsDarkMode(!isDarkMode);
-            setDarkMode(!isDarkMode);
+            setDarkMode(!isDarkMode); // Update global dark mode state
           }}
           style={{
             fontSize: "24px",
@@ -136,7 +149,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
             </button>
           ) : (
             <button
-              onClick={() => {}}
+              onClick={handleLogout}
               style={{
                 color: "#fff",
                 display: "block",
@@ -151,6 +164,17 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
             </button>
           )}
         </div>
+
+        {/* LoginSheet */}
+        {setShowLogin && (
+          <LoginSheet
+            onClose={() => {
+              setShowLogin(false);
+              onClose(); // Close sidebar after login
+            }}
+            onLogin={() => { setLoggedIn(true); }} // Handle login success
+          />
+        )}
       </div>
     </div>
   );
