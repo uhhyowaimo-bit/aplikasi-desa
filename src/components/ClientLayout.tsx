@@ -54,7 +54,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     } else {
       toggleDark(false);
     }
-  }, []); // Hanya jalankan satu kali saat mount
+  }, [toggleDark]); // Tambahkan toggleDark sebagai dependensi
 
   return (
     <>
