@@ -2,7 +2,7 @@
 
 import { useState, useEffect, FC } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import LoginSheet from "@/components/LoginSheet"; // Pastikan LoginSheet diimpor
+import LoginSheet from "@/components/LoginSheet"; // Import LoginSheet dengan benar
 
 interface SidebarProps {
   isOpen: boolean;
@@ -172,7 +172,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
               setShowLogin(false);
               onClose(); // Close sidebar after login
             }}
-            onLogin={() => { setLoggedIn(true); }} // Handle login success
+            onLogin={() => { setIsLoggedIn(true); }} // Handle login success
           />
         )}
       </div>
