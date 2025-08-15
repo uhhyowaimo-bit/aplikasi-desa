@@ -125,3 +125,65 @@ html, body {
   text-decoration: none;
   font-size: 16px;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  header {
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header img {
+    margin-bottom: 10px;
+  }
+
+  main {
+    padding: 15px;
+  }
+
+  .sidebar {
+    width: 200px; /* Reduce sidebar width on mobile */
+    transform: translateX(-100%); /* Ensure sidebar is hidden by default */
+  }
+
+  .sidebar.open {
+    transform: translateX(0); /* Show sidebar when open */
+  }
+
+  .bottom-nav {
+    padding: 15px 0;
+  }
+
+  .bottom-nav a {
+    font-size: 14px; /* Reduce text size for bottom nav on mobile */
+  }
+
+  button {
+    width: 100%; /* Make buttons full-width on smaller screens */
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  header h3 {
+    font-size: 18px;
+  }
+
+  header img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .sidebar {
+    width: 180px; /* Further reduce sidebar width */
+  }
+
+  .bottom-nav a {
+    font-size: 12px; /* Reduce font size even further */
+  }
+
+  button {
+    padding: 12px 20px; /* Adjust button padding */
+  }
+}
