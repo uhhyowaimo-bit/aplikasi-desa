@@ -7,24 +7,22 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark } = useAppContext();
+  const { dark } = useAppContext();
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Perbaikan: useEffect dipanggil tanpa kondisi
   useEffect(() => {
     setMounted(true);
     const loginStatus = localStorage.getItem("isLoggedIn");
     if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
-  }, []);
+  }, []); // useEffect dipanggil hanya sekali ketika komponen dipasang (mount)
 
-  if (!mounted) return null;
-
-  // Countdown Logic
   useEffect(() => {
     const targetDate = new Date("2025-08-17T00:00:00").getTime();
     const interval = setInterval(() => {
@@ -42,7 +40,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, []); // useEffect dipanggil hanya sekali ketika komponen dipasang (mount)
 
   const handleLoginOpen = () => {
     setShowLogin(true);
