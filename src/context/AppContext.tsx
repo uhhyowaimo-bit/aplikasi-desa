@@ -1,18 +1,21 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
+// Tipe untuk Context
 interface AppContextType {
   dark: boolean;
   toggleDark: (value: boolean) => void;
 }
 
+// Membuat context dengan nilai default null
 const AppContext = createContext<AppContextType | null>(null);
 
+// Provider untuk AppContext
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [dark, setDark] = useState(false); // Default state
+  const [dark, setDark] = useState(false); // Status default untuk mode gelap
 
   const toggleDark = (value: boolean) => {
     setDark(value);
-    localStorage.setItem("darkMode", value.toString()); // Save to localStorage
+    localStorage.setItem("darkMode", value.toString()); // Simpan ke localStorage
   };
 
   return (
@@ -22,6 +25,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Hook untuk menggunakan context
 export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context) {
