@@ -7,7 +7,7 @@ import LoginSheet from "@/components/LoginSheet"; // Import LoginSheet
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  setDarkMode: (value: boolean) => void;
+  setDarkMode: (value: boolean) => void; // Terima props setDarkMode
   isLoggedIn: boolean;
   setShowLogin: (value: boolean) => void;
 }
@@ -25,17 +25,16 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
     { day: "Min", visitors: 0 },
   ]);
 
-  // Mengambil data statistik pengunjung
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await fetch("/api/visitors");
         const data = await res.json();
-        setStats(data); // Set the visitor stats (daily, weekly, total)
+        setStats(data); 
         setChartData((prev) =>
           prev.map((item) => ({
             ...item,
-            visitors: Math.floor(Math.random() * 100 + 20), // Random visitor data for chart
+            visitors: Math.floor(Math.random() * 100 + 20), 
           }))
         );
       } catch (err) {
@@ -44,11 +43,11 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
     }
 
     fetchData();
-    const interval = setInterval(fetchData, 30000); // Refresh data every 30 seconds
+    const interval = setInterval(fetchData, 30000); // Refresh every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
-  // Effect untuk dark mode
+  // Dark mode effect
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark");
@@ -57,17 +56,15 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
     }
   }, [isDarkMode]);
 
-  // Fungsi logout
   const handleLogout = () => {
     setIsDarkMode(false);
     setDarkMode(false); // Update global dark mode state
     localStorage.clear();
     sessionStorage.clear();
-    window.location.reload(); // Refresh the page after logout
+    window.location.reload();
   };
 
-  // Tidak merender sidebar jika tidak terbuka
-  if (!isOpen) return null;
+  if (!isOpen) return null; // Do not render sidebar if not open
 
   return (
     <div
