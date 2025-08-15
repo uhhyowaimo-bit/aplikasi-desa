@@ -7,16 +7,20 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark } = useAppContext() || {}; // Ambil 'dark' dari context
-  const [countdown, setCountdown] = useState(""); 
+  const { dark } = useAppContext();
+  const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setMounted(true); // Pastikan komponen sudah terpasang
-  }, []); 
+    setMounted(true);
+    const loginStatus = localStorage.getItem("isLoggedIn");
+    if (loginStatus === "true") {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
     const targetDate = new Date("2025-08-17T00:00:00").getTime();
@@ -37,24 +41,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const loginStatus = localStorage.getItem("isLoggedIn");
-    if (loginStatus === "true") {
-      setIsLoggedIn(true);
-    }
-  }, []); 
+  const handleLoginOpen = () => {
+    setShowLogin(true);
+    setSidebarOpen(false);
+  };
 
-  if (!mounted) return null; // Jangan render komponen jika belum dimuat
-
-  // Cek dan set mode gelap berdasarkan localStorage
-  useEffect(() => {
-    const savedDarkMode = localStorage.getItem("darkMode");
-    if (savedDarkMode === "true") {
-      toggleDark(true);
-    } else {
-      toggleDark(false);
-    }
-  }, [toggleDark]); // Tambahkan toggleDark sebagai dependensi
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+    window.location.reload();
+  };
 
   return (
     <>
