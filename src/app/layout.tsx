@@ -1,11 +1,13 @@
+import React from "react";
 import { AppContextProvider } from "@/context/AppContext";
 
-function MyApp({ Component, pageProps }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AppContextProvider>
-      <Component {...pageProps} />
+      <html lang="id">
+        <head />
+        <body>{children}</body>
+      </html>
     </AppContextProvider>
   );
 }
-
-export default MyApp;
