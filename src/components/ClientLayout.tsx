@@ -16,7 +16,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     setMounted(true); // Pastikan komponen sudah terpasang
-  }, []); 
+  }, []); // Tidak ada kondisi atau variabel yang bergantung
 
   useEffect(() => {
     const targetDate = new Date("2025-08-17T00:00:00").getTime();
@@ -35,21 +35,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, []); // Tidak ada kondisi atau variabel yang bergantung
 
   useEffect(() => {
     const loginStatus = localStorage.getItem("isLoggedIn");
     if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
-  }, []); 
+  }, []); // Tidak ada kondisi atau variabel yang bergantung
+
+  useEffect(() => {
+    toggleDark(false); // Hapus penggunaan localStorage dan langsung set mode terang
+  }, [toggleDark]); // Pastikan ini tidak dipanggil kondisional
 
   if (!mounted) return null; // Jangan render komponen jika belum dimuat
-
-  // Hapus kode penggunaan localStorage untuk dark mode dan langsung set toggleDark
-  useEffect(() => {
-    toggleDark(false); // Atur mode terang secara langsung
-  }, [toggleDark]);
 
   return (
     <>
