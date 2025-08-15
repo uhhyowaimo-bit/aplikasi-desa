@@ -45,7 +45,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     sessionStorage.clear();
     setIsLoggedIn(false);
     setCountdown("");
-    setDarkMode(false); // Reset dark mode on logout
+    setDarkMode(false);
     window.location.reload();
   };
 
@@ -113,7 +113,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       )}
 
       {/* SIDEBAR */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} setDarkMode={setDarkMode} />
+      <Sidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+        setDarkMode={setDarkMode} 
+        isLoggedIn={isLoggedIn} // Pass isLoggedIn to Sidebar
+      />
 
       {/* MAIN CONTENT */}
       <main
