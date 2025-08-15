@@ -13,7 +13,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [darkMode, setDarkMode] = useState(false); // Local state for dark mode
+  const [darkMode, setDarkMode] = useState(dark); // Local state for dark mode, initialize from context
 
   useEffect(() => {
     setMounted(true);
@@ -22,6 +22,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setIsLoggedIn(true);
     }
 
+    // Auto-set dark mode based on system preference
     const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setDarkMode(systemPreference); // Set dark mode based on system preference
   }, []);
@@ -44,7 +45,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     sessionStorage.clear();
     setIsLoggedIn(false);
     setCountdown("");
-    setDarkMode(false);
+    setDarkMode(false); // Reset dark mode on logout
     window.location.reload();
   };
 
