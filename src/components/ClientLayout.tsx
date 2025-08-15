@@ -7,13 +7,13 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext(); // Ambil status dark mode dari context
+  const { dark } = useAppContext(); // You can keep using this if you want to retain global dark mode context
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [darkMode, setDarkMode] = useState(dark); // Menambahkan dark mode state
+  const [darkMode, setDarkMode] = useState(false); // State for managing dark mode
 
   useEffect(() => {
     setMounted(true);
@@ -21,6 +21,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
+
+    // Automatically set dark mode based on system preference or custom logic
+    const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setDarkMode(systemPreference); // Or set it based on other logic if needed
   }, []);
 
   useEffect(() => {
@@ -48,9 +52,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+    // Clear session data
+    localStorage.clear(); // Clears all local storage
+    sessionStorage.clear(); // Clears session storage
     setIsLoggedIn(false);
-    window.location.reload();
+    setCountdown("");
+    setDarkMode(false); // Reset dark mode on logout
+    window.location.reload(); // Reload page to reset all states and localStorage
   };
 
   return (
@@ -117,7 +125,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       )}
 
       {/* SIDEBAR */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} setDarkMode={setDarkMode} isLoggedIn={isLoggedIn} setShowLogin={setShowLogin} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* MAIN CONTENT */}
       <main
