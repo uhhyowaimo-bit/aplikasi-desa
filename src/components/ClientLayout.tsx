@@ -100,7 +100,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           onClick={() => setSidebarOpen(true)}
           style={{
             position: "fixed",
-            right: 0,
+            right: rtl ? "unset" : "0", // Menyesuaikan posisi button berdasarkan RTL
+            left: rtl ? "0" : "unset",  // Menyesuaikan posisi button berdasarkan RTL
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2000,
@@ -124,7 +125,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <main
         style={{
           direction: rtl ? "rtl" : "ltr",
-          backgroundColor: dark ? "#111" : "#fff",
+          backgroundColor: dark ? "#333" : "#fff", // Background abu-abu saat dark mode
           color: dark ? "#fff" : "#111",
         }}
       >
