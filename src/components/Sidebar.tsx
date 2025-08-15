@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useAppContext } from "@/context/AppContext";
-import LoginSheet from "@/components/LoginSheet"; 
+import { useState, useEffect, useRef, FC } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { FC } from "react";
+import LoginSheet from "@/components/LoginSheet";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -81,7 +79,6 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode }) => {
       }}
     >
       <div
-        ref={sidebarRef}
         style={{
           height: "100%",
           width: "300px",
