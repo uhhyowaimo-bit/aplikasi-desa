@@ -7,13 +7,13 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext(); // You can keep using this if you want to retain global dark mode context
+  const { dark } = useAppContext(); // Menjaga konteks mode gelap global
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [darkMode, setDarkMode] = useState(false); // State for managing dark mode
+  const [darkMode, setDarkMode] = useState(false); // Mengelola state mode gelap
 
   useEffect(() => {
     setMounted(true);
@@ -22,9 +22,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setIsLoggedIn(true);
     }
 
-    // Automatically set dark mode based on system preference or custom logic
+    // Mengatur mode gelap otomatis berdasarkan preferensi sistem
     const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDarkMode(systemPreference); // Or set it based on other logic if needed
+    setDarkMode(systemPreference); // Atau bisa diatur berdasarkan logika lain
   }, []);
 
   useEffect(() => {
@@ -52,13 +52,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   const handleLogout = () => {
-    // Clear session data
-    localStorage.clear(); // Clears all local storage
-    sessionStorage.clear(); // Clears session storage
+    // Menghapus data sesi
+    localStorage.clear(); // Menghapus seluruh local storage
+    sessionStorage.clear(); // Menghapus sesi storage
     setIsLoggedIn(false);
     setCountdown("");
-    setDarkMode(false); // Reset dark mode on logout
-    window.location.reload(); // Reload page to reset all states and localStorage
+    setDarkMode(false); // Reset mode gelap setelah logout
+    window.location.reload(); // Reload halaman untuk mereset semua state dan localStorage
   };
 
   return (
@@ -133,7 +133,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         style={{
           backgroundColor: darkMode ? "#111" : "#fff",
           color: darkMode ? "#fff" : "#111",
-          padding: "20px", // Added some padding for mobile
+          padding: "20px", // Padding ditambahkan agar lebih responsif
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
