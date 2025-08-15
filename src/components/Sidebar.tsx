@@ -1,21 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useAppContext } from "@/context/AppContext"; 
-import LoginSheet from "@/components/LoginSheet"; 
+import { useState, useEffect, FC } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import LoginSheet from "@/components/LoginSheet"; // Import LoginSheet
 
-export default function Sidebar({
-  isOpen,
-  onClose,
-}: {
+interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
-}) {
-  const [showLogin, setShowLogin] = useState(false); 
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const { dark, toggleDark, lang } = useAppContext();
+  setDarkMode: (value: boolean) => void;
+  isLoggedIn: boolean;
+  setShowLogin: (value: boolean) => void;
+}
+
+const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, setShowLogin }) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
     { day: "Sen", visitors: 0 },
@@ -27,64 +25,48 @@ export default function Sidebar({
     { day: "Min", visitors: 0 },
   ]);
 
-  // Handle outside click and ESC key
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-
-    function handleEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleEsc);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEsc);
-    };
-  }, [isOpen, onClose]);
-
-  // Fetch visitor stats
+  // Mengambil data statistik pengunjung
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await fetch("/api/visitors");
         const data = await res.json();
-        setStats(data);
+        setStats(data); // Set the visitor stats (daily, weekly, total)
         setChartData((prev) =>
           prev.map((item) => ({
             ...item,
-            visitors: Math.floor(Math.random() * 100 + 20),
+            visitors: Math.floor(Math.random() * 100 + 20), // Random visitor data for chart
           }))
         );
       } catch (err) {
-        console.error("Failed to fetch data:", err);
+        console.error("Gagal fetch data:", err);
       }
     }
 
     fetchData();
-    const interval = setInterval(fetchData, 30000);
+    const interval = setInterval(fetchData, 30000); // Refresh data every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true");
-    setShowLogin(false);
-  };
+  // Effect untuk dark mode
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [isDarkMode]);
 
+  // Fungsi logout
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.setItem("isLoggedIn", "false");
-    window.location.reload();
+    setIsDarkMode(false);
+    setDarkMode(false); // Update global dark mode state
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload(); // Refresh the page after logout
   };
 
+  // Tidak merender sidebar jika tidak terbuka
   if (!isOpen) return null;
 
   return (
@@ -99,46 +81,44 @@ export default function Sidebar({
       }}
     >
       <div
-        ref={sidebarRef}
         style={{
           height: "100%",
           width: "300px",
-          background: dark ? "#333" : "#432874", 
+          background: isDarkMode ? "#333" : "#432874",
           color: "#fff",
           padding: "20px",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start", // Align top for stats and chart
+          justifyContent: "space-between",
           boxShadow: "-3px 0 8px rgba(0,0,0,0.4)",
           overflow: "hidden",
-          transform: "translateX(0)",
         }}
       >
-        {/* Dark Mode Emoji Toggle Button */}
-        <div style={{ marginBottom: "20px" }}>
-          <h3>🌙 / ☀️</h3>
-          <button
-            onClick={toggleDark}
-            style={{
-              background: "transparent",
-              border: "none",
-              fontSize: "2rem",
-              cursor: "pointer",
-            }}
-          >
-            {dark ? "🌙" : "☀️"}
-          </button>
-        </div>
+        {/* Dark mode toggle */}
+        <button
+          onClick={() => {
+            setIsDarkMode(!isDarkMode);
+            setDarkMode(!isDarkMode); // Update global dark mode state
+          }}
+          style={{
+            fontSize: "24px",
+            background: "none",
+            border: "none",
+            color: "#fff",
+            cursor: "pointer",
+          }}
+        >
+          {isDarkMode ? "🌙" : "🌞"}
+        </button>
 
-        {/* Visitor Stats */}
-        <h3 style={{ fontSize: "16px", marginTop: "20px" }}>
-          📈 {lang === "id" ? "Statistik Pengunjung" : "Visitor Stats"}
-        </h3>
+        {/* Statistik Pengunjung */}
+        <h3>📈 Statistik Pengunjung</h3>
         <p>Hari Ini: <b>{stats.daily}</b></p>
         <p>Minggu Ini: <b>{stats.weekly}</b></p>
         <p>Total: <b>{stats.total}</b></p>
 
-        <div style={{ marginTop: "10px", flex: 1 }}>
+        {/* Grafik Pengunjung */}
+        <div style={{ marginTop: "10px" }}>
           <ResponsiveContainer width="100%" height={150}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -150,14 +130,13 @@ export default function Sidebar({
           </ResponsiveContainer>
         </div>
 
-        {/* Login/Logout Button */}
+        {/* Login/Logout */}
         <div>
           {!isLoggedIn ? (
             <button
-              onClick={() => setShowLogin(true)}
+              onClick={() => setShowLogin(true)} // Show Login Form
               style={{
                 color: "#fff",
-                textDecoration: "none",
                 display: "block",
                 padding: "12px",
                 background: "#5e3ea1",
@@ -173,7 +152,6 @@ export default function Sidebar({
               onClick={handleLogout}
               style={{
                 color: "#fff",
-                textDecoration: "none",
                 display: "block",
                 padding: "12px",
                 background: "#e74c3c",
@@ -185,19 +163,21 @@ export default function Sidebar({
               🚪 Logout
             </button>
           )}
-
-          {/* LoginSheet */}
-          {showLogin && (
-            <LoginSheet
-              onClose={() => {
-                setShowLogin(false);
-                onClose();
-              }}
-              onLogin={handleLoginSuccess}
-            />
-          )}
         </div>
+
+        {/* LoginSheet */}
+        {setShowLogin && (
+          <LoginSheet
+            onClose={() => {
+              setShowLogin(false);
+              onClose(); // Close sidebar after login
+            }}
+            onLogin={() => { setIsLoggedIn(true); }} // Handle login success
+          />
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default Sidebar;
