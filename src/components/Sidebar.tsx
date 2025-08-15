@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useAppContext } from "@/context/AppContext";
-import LoginSheet from "@/components/LoginSheet"; // Sesuaikan dengan path
+import { useAppContext } from "@/context/AppContext"; // Mengimpor useAppContext
+import LoginSheet from "@/components/LoginSheet"; // Sesuaikan path
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function Sidebar({
@@ -29,8 +29,10 @@ export default function Sidebar({
   // Memastikan mode gelap tetap konsisten setelah refresh
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
-    if (savedDarkMode) {
-      toggleDark(savedDarkMode === "true");
+    if (savedDarkMode === "true") {
+      toggleDark(true); // Jika ada, set mode gelap ke true
+    } else {
+      toggleDark(false); // Jika tidak, set mode gelap ke false
     }
   }, [toggleDark]);
 
@@ -121,19 +123,17 @@ export default function Sidebar({
           overflow: "hidden",
         }}
       >
-        {/* Konten sidebar */}
+        {/* Dark Mode Toggle */}
         <div>
           <h2>⚙️ Pengaturan</h2>
-
-          {/* Dark Mode Toggle */}
           <div>
             <label>
               <input
                 type="checkbox"
                 checked={dark}
                 onChange={() => {
-                  toggleDark(!dark); // Toggle dark mode, tanpa parameter
-                  localStorage.setItem("darkMode", !dark ? "true" : "false"); // Simpan pilihan mode
+                  toggleDark(!dark); // Toggle dark mode
+                  localStorage.setItem("darkMode", !dark ? "true" : "false"); // Simpan mode
                 }}
               />{" "}
               {dark ? "🌙 Mode Gelap" : "🌞 Mode Terang"}
