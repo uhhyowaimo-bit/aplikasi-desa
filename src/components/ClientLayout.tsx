@@ -1,31 +1,25 @@
-// src/components/ClientLayout.tsx
-
-"use client";
+"use client"; 
 
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import LoginSheet from "@/components/LoginSheet";
-import { useAppContext } from "@/context/AppContext"; // Pastikan import dengan benar
+import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark, toggleDark } = useAppContext(); // Memastikan dark dan toggleDark diambil dari context
-  const [countdown, setCountdown] = useState("");
+  const { dark, toggleDark } = useAppContext(); // Ambil 'dark' dari context
+  const [countdown, setCountdown] = useState(""); 
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Menjalankan hooks useEffect tanpa kondisi
   useEffect(() => {
-    setMounted(true);
-    const loginStatus = localStorage.getItem("isLoggedIn");
-    if (loginStatus === "true") {
-      setIsLoggedIn(true);
-    }
-  }, []);
+    setMounted(true); // Pastikan komponen sudah terpasang
+  }, []); // Hanya dijalankan sekali saat komponen pertama kali dimuat
 
-  if (!mounted) return null; // Menghindari kesalahan SSR
-
+  // Pastikan tidak ada useEffect yang dipanggil secara kondisional
   useEffect(() => {
     const targetDate = new Date("2025-08-17T00:00:00").getTime();
     const interval = setInterval(() => {
@@ -45,6 +39,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const loginStatus = localStorage.getItem("isLoggedIn");
+    if (loginStatus === "true") {
+      setIsLoggedIn(true);
+    }
+  }, []); // Hooks untuk login status
+
   const handleLoginOpen = () => {
     setShowLogin(true);
     setSidebarOpen(false);
@@ -55,6 +56,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     setIsLoggedIn(false);
     window.location.reload();
   };
+
+  if (!mounted) return null; // Jangan render komponen jika belum dimuat
 
   return (
     <>
