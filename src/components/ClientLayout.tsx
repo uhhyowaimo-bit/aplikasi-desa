@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -14,12 +14,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Menjalankan hooks useEffect tanpa kondisi
   useEffect(() => {
     setMounted(true); // Pastikan komponen sudah terpasang
-  }, []); // Hanya dijalankan sekali saat komponen pertama kali dimuat
+  }, []); 
 
-  // Pastikan tidak ada useEffect yang dipanggil secara kondisional
   useEffect(() => {
     const targetDate = new Date("2025-08-17T00:00:00").getTime();
     const interval = setInterval(() => {
@@ -44,18 +42,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
-  }, []); // Hooks untuk login status
-
-  const handleLoginOpen = () => {
-    setShowLogin(true);
-    setSidebarOpen(false);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    setIsLoggedIn(false);
-    window.location.reload();
-  };
+  }, []); 
 
   if (!mounted) return null; // Jangan render komponen jika belum dimuat
 
