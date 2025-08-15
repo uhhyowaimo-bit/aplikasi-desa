@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 const AppContext = createContext(null);
 
@@ -7,7 +7,7 @@ export const useAppContext = () => useContext(AppContext);
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [dark, setDark] = useState(false);
 
-  // Mengambil mode gelap dari localStorage saat aplikasi dimuat
+  // Periksa apakah dark mode sudah disimpan di localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode === "true") {
@@ -15,7 +15,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Fungsi untuk mengubah dark mode
   const toggleDark = () => {
     const newDark = !dark;
     setDark(newDark);
