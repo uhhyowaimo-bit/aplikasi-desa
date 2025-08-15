@@ -7,12 +7,13 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext();
+  const { dark } = useAppContext(); // Ambil status dark mode dari context
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [darkMode, setDarkMode] = useState(dark); // Menambahkan dark mode state
 
   useEffect(() => {
     setMounted(true);
@@ -60,8 +61,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           position: "sticky",
           top: 0,
           zIndex: 100,
-          background: dark ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
-          color: dark ? "#fff" : "#111",
+          background: darkMode ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
+          color: darkMode ? "#fff" : "#111",
           padding: "10px 15px",
           borderRadius: "0 0 8px 8px",
           display: "flex",
@@ -102,7 +103,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2000,
-            background: dark ? "#444" : "#6a11cb",
+            background: darkMode ? "#444" : "#6a11cb",
             color: "#fff",
             border: "none",
             padding: "10px 15px",
@@ -116,20 +117,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       )}
 
       {/* SIDEBAR */}
-      <Sidebar 
-  isOpen={sidebarOpen} 
-  onClose={() => setSidebarOpen(false)} 
-  setDarkMode={setDarkMode} 
-  isLoggedIn={isLoggedIn} 
-  setShowLogin={setShowLogin} 
-/>
-
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} setDarkMode={setDarkMode} isLoggedIn={isLoggedIn} setShowLogin={setShowLogin} />
 
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: dark ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
-          color: dark ? "#fff" : "#111",
+          backgroundColor: darkMode ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          color: darkMode ? "#fff" : "#111",
           padding: "20px", // Tambahkan padding jika diperlukan
         }}
       >
