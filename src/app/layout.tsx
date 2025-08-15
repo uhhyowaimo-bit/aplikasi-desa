@@ -1,14 +1,11 @@
-// src/app/layout.tsx
-import React from "react";
+import { AppContextProvider } from "@/context/AppContext";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+function MyApp({ Component, pageProps }) {
   return (
-    <div>
-      {/* Tampilan layout global Anda */}
-      <header>
-        <h1>Welcome to Aplikasi Desa</h1>
-      </header>
-      <main>{children}</main>
-    </div>
+    <AppContextProvider>
+      <Component {...pageProps} />
+    </AppContextProvider>
   );
 }
+
+export default MyApp;
