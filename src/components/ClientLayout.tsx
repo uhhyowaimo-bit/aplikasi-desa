@@ -1,16 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar"; 
-import BottomNav from "@/components/BottomNav"; 
-import LoginSheet from "@/components/LoginSheet"; 
-import { useAppContext } from "@/context/AppContext"; 
+import Sidebar from "@/components/Sidebar";
+import BottomNav from "@/components/BottomNav";
+import LoginSheet from "@/components/LoginSheet";
+import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { rtl, dark, toggleRtl, toggleDark, lang } = useAppContext(); 
-  const [countdown, setCountdown] = useState(""); 
+  const { rtl, dark, toggleRtl, toggleDark, lang } = useAppContext();
+  const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false); 
+  const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const handleLoginOpen = () => {
     setShowLogin(true);
-    setSidebarOpen(false); 
+    setSidebarOpen(false);
   };
 
   const handleLogout = () => {
@@ -123,8 +123,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          direction: rtl ? "rtl" : "ltr", 
-          backgroundColor: dark ? "#111" : "#fff", 
+          direction: rtl ? "rtl" : "ltr",
+          backgroundColor: dark ? "#111" : "#fff",
           color: dark ? "#fff" : "#111",
         }}
       >
