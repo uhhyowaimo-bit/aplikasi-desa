@@ -1,4 +1,3 @@
-// ClientLayout.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -47,6 +46,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   if (!mounted) return null; // Jangan render komponen jika belum dimuat
 
+  // Cek dan set mode gelap berdasarkan localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode === "true") {
@@ -54,7 +54,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     } else {
       toggleDark(false);
     }
-  }, [toggleDark]);
+  }, []); // Hanya jalankan satu kali saat mount
 
   return (
     <>
