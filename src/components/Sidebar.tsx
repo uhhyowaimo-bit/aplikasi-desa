@@ -2,14 +2,28 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useAppContext } from "@/context/AppContext";
-import LoginSheet from "@/components/LoginSheet"; // Sesuaikan path
+import LoginSheet from "@/components/LoginSheet"; 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { FC } from "react";
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const { dark, toggleDark } = useAppContext(); // Ambil dark mode dari context
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+  setDarkMode: (value: boolean) => void; // Function to change dark mode
+}
+
+const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode }) => {
+  const [isDarkMode, setIsDarkMode] = useState(false); // Local state for dark mode
+
+  // Apply dark mode to the whole page
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [isDarkMode]);
+
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
     { day: "Sen", visitors: 0 },
@@ -20,42 +34,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     { day: "Sab", visitors: 0 },
     { day: "Min", visitors: 0 },
   ]);
-  
-  const [isDarkMode, setIsDarkMode] = useState(dark); // Mengelola dark mode di sini
 
-  // Menambahkan efek untuk mengaplikasikan dark mode ke seluruh halaman
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }, [isDarkMode]);
-
-  // Mengelola klik di luar sidebar dan ESC
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-
-    function handleEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleEsc);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEsc);
-    };
-  }, [isOpen, onClose]);
-
-  // Ambil data pengunjung
   useEffect(() => {
     async function fetchData() {
       try {
@@ -79,17 +58,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, []);
 
   const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-    setShowLogin(false);
+    // Handle login success
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setShowLogin(false);
-    window.location.reload();
+    setIsDarkMode(false);
+    setDarkMode(false); // Update global dark mode state
+    window.location.reload(); // Refresh the page after logout
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) return null; // Do not render if sidebar is not open
 
   return (
     <div
@@ -107,7 +85,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         style={{
           height: "100%",
           width: "300px",
-          background: isDarkMode ? "#333" : "#432874", // Warna sidebar disesuaikan dengan mode gelap
+          background: isDarkMode ? "#333" : "#432874", // Background color based on dark mode
           color: "#fff",
           padding: "20px",
           display: "flex",
@@ -117,22 +95,27 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           overflow: "hidden",
         }}
       >
+        {/* Dark mode toggle */}
         <div>
-          <h2>⚙️ Pengaturan</h2>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                checked={isDarkMode}
-                onChange={() => {
-                  setIsDarkMode(!isDarkMode); // Toggle dark mode
-                  toggleDark(); // Update status dark mode di global context
-                }}
-              />{" "}
-              {isDarkMode ? "🌙 Mode Gelap" : "🌞 Mode Terang"}
-            </label>
+          <div style={{ marginBottom: "20px" }}>
+            <button
+              onClick={() => {
+                setIsDarkMode(!isDarkMode); // Toggle local dark mode
+                setDarkMode(!isDarkMode); // Update global dark mode context
+              }}
+              style={{
+                fontSize: "24px",
+                background: "none",
+                border: "none",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              {isDarkMode ? "🌙" : "🌞"} {/* Toggle between moon and sun */}
+            </button>
           </div>
 
+          {/* Visitor Stats */}
           <h3 style={{ fontSize: "16px", marginTop: "20px" }}>📈 Statistik Pengunjung</h3>
           <p>Hari Ini: <b>{stats.daily}</b></p>
           <p>Minggu Ini: <b>{stats.weekly}</b></p>
@@ -150,6 +133,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
         </div>
 
+        {/* Login/Logout buttons */}
         <div>
           {!isLoggedIn ? (
             <button
@@ -187,13 +171,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <LoginSheet
               onClose={() => {
                 setShowLogin(false);
-                onClose(); 
+                onClose(); // Close sidebar after login
               }}
-              onLogin={handleLoginSuccess}
+              onLogin={handleLoginSuccess} // Handle login success
             />
           )}
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Sidebar;
