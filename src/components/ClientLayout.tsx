@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
