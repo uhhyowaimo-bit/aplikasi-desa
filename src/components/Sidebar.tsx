@@ -132,7 +132,7 @@ export default function Sidebar({
                 type="checkbox"
                 checked={dark}
                 onChange={() => {
-                  toggleDark(!dark); // Toggle dark mode
+                  toggleDark(!dark); // Toggle dark mode, tanpa parameter
                   localStorage.setItem("darkMode", !dark ? "true" : "false"); // Simpan pilihan mode
                 }}
               />{" "}
