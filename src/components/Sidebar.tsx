@@ -30,9 +30,7 @@ export default function Sidebar({
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode === "true") {
-      toggleDark(true); // Jika ada, set mode gelap ke true
-    } else {
-      toggleDark(false); // Jika tidak, set mode gelap ke false
+      toggleDark(); // Jika ada, toggle mode gelap
     }
   }, [toggleDark]);
 
@@ -132,7 +130,7 @@ export default function Sidebar({
                 type="checkbox"
                 checked={dark}
                 onChange={() => {
-                  toggleDark(!dark); // Toggle dark mode
+                  toggleDark(); // Toggle dark mode
                   localStorage.setItem("darkMode", !dark ? "true" : "false"); // Simpan mode
                 }}
               />{" "}
