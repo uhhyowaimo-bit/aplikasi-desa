@@ -1,14 +1,17 @@
-import { AppContextProvider } from "@/context/AppContext"; // Import AppContextProvider
+import { AppProvider } from "@/context/AppContext"; // Import AppProvider
 import ClientLayout from "@/components/ClientLayout"; // Import ClientLayout
 
-function App() {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AppContextProvider>
-      <ClientLayout>
-        {/* Konten aplikasi */}
-      </ClientLayout>
-    </AppContextProvider>
+    <html lang="id">
+      <head>
+        <title>Aplikasi Desa</title>
+      </head>
+      <body>
+        <AppProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </AppProvider>
+      </body>
+    </html>
   );
 }
-
-export default App;
