@@ -1,14 +1,15 @@
-// src/context/AppContext.tsx
+"use client";
 
-"use client"; // Pastikan kita menggunakan client-side
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-import React, { createContext, useState, useContext, useEffect } from "react";
-
-// Membuat konteks untuk dark mode
+// Membuat context
 const AppContext = createContext(null);
 
-export function AppProvider({ children }) {
+// Provider untuk membungkus komponen
+export const AppContextProvider = ({ children }) => {
   const [dark, setDark] = useState(false);
+
+  const toggleDark = () => setDark((prevState) => !prevState);
 
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
@@ -17,21 +18,14 @@ export function AppProvider({ children }) {
     }
   }, []);
 
-  const toggleDark = () => {
-    setDark((prevDark) => {
-      const newDark = !prevDark;
-      localStorage.setItem("darkMode", newDark.toString());
-      return newDark;
-    });
-  };
-
   return (
     <AppContext.Provider value={{ dark, toggleDark }}>
       {children}
     </AppContext.Provider>
   );
-}
+};
 
-export function useAppContext() {
+// Custom hook untuk mengakses context
+export const useAppContext = () => {
   return useContext(AppContext);
-}
+};
