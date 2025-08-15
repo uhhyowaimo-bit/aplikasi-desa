@@ -21,7 +21,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setIsLoggedIn(true);
     }
   }, []);
-
+if (!mounted) return null;
+  
   useEffect(() => {
     const targetDate = new Date("2025-08-17T00:00:00").getTime();
     const interval = setInterval(() => {
