@@ -7,7 +7,7 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext(); // Using global dark mode context
+  const { dark } = useAppContext(); // Global dark mode context
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,12 +22,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setIsLoggedIn(true);
     }
 
-    // Automatically set dark mode based on system preference
     const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDarkMode(systemPreference);
+    setDarkMode(systemPreference); // Set dark mode based on system preference
   }, []);
 
-  // Apply dark mode to the whole page by adding/removing class on <body>
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark");
@@ -42,11 +40,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   const handleLogout = () => {
-    localStorage.clear(); // Clears all local storage
-    sessionStorage.clear(); // Clears session storage
+    localStorage.clear();
+    sessionStorage.clear();
     setIsLoggedIn(false);
     setCountdown("");
-    setDarkMode(false); // Reset dark mode
+    setDarkMode(false);
     window.location.reload();
   };
 
@@ -114,12 +112,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       )}
 
       {/* SIDEBAR */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} setDarkMode={setDarkMode} />
 
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: darkMode ? "#111" : "#fff", // Apply dark mode color
+          backgroundColor: darkMode ? "#111" : "#fff",
           color: darkMode ? "#fff" : "#111",
           padding: "20px",
         }}
