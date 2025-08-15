@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef, FC } from "react";
+import { useState, useEffect, FC } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import LoginSheet from "@/components/LoginSheet";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  setDarkMode: (value: boolean) => void; // Function to change dark mode
+  setDarkMode: (value: boolean) => void;
+  isLoggedIn: boolean; // Receiving isLoggedIn as prop
 }
 
-const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode }) => {
+const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn }) => {
   const [isDarkMode, setIsDarkMode] = useState(false); // Local state for dark mode
 
-  // Apply dark mode to the whole page
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark");
@@ -22,6 +22,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode }) => {
     }
   }, [isDarkMode]);
 
+  // Visitor stats fetching logic ...
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
     { day: "Sen", visitors: 0 },
@@ -55,18 +56,6 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleLoginSuccess = () => {
-    // Handle login success
-  };
-
-  const handleLogout = () => {
-    setIsDarkMode(false);
-    setDarkMode(false); // Update global dark mode state
-    window.location.reload(); // Refresh the page after logout
-  };
-
-  if (!isOpen) return null; // Do not render if sidebar is not open
-
   return (
     <div
       style={{
@@ -82,7 +71,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode }) => {
         style={{
           height: "100%",
           width: "300px",
-          background: isDarkMode ? "#333" : "#432874", // Background color based on dark mode
+          background: isDarkMode ? "#333" : "#432874",
           color: "#fff",
           padding: "20px",
           display: "flex",
@@ -94,43 +83,30 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode }) => {
       >
         {/* Dark mode toggle */}
         <div>
-          <div style={{ marginBottom: "20px" }}>
-            <button
-              onClick={() => {
-                setIsDarkMode(!isDarkMode); // Toggle local dark mode
-                setDarkMode(!isDarkMode); // Update global dark mode context
-              }}
-              style={{
-                fontSize: "24px",
-                background: "none",
-                border: "none",
-                color: "#fff",
-                cursor: "pointer",
-              }}
-            >
-              {isDarkMode ? "🌙" : "🌞"} {/* Toggle between moon and sun */}
-            </button>
-          </div>
-
-          {/* Visitor Stats */}
-          <h3 style={{ fontSize: "16px", marginTop: "20px" }}>📈 Statistik Pengunjung</h3>
-          <p>Hari Ini: <b>{stats.daily}</b></p>
-          <p>Minggu Ini: <b>{stats.weekly}</b></p>
-          <p>Total: <b>{stats.total}</b></p>
-          <div style={{ marginTop: "10px" }}>
-            <ResponsiveContainer width="100%" height={150}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="visitors" stroke="#82ca9d" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <button
+            onClick={() => {
+              setIsDarkMode(!isDarkMode);
+              setDarkMode(!isDarkMode);
+            }}
+            style={{
+              fontSize: "24px",
+              background: "none",
+              border: "none",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            {isDarkMode ? "🌙" : "🌞"}
+          </button>
         </div>
 
-        {/* Login/Logout buttons */}
+        {/* Visitor stats */}
+        <h3>📈 Statistik Pengunjung</h3>
+        <p>Hari Ini: <b>{stats.daily}</b></p>
+        <p>Minggu Ini: <b>{stats.weekly}</b></p>
+        <p>Total: <b>{stats.total}</b></p>
+
+        {/* Login/Logout */}
         <div>
           {!isLoggedIn ? (
             <button
@@ -162,16 +138,6 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode }) => {
             >
               🚪 Logout
             </button>
-          )}
-
-          {showLogin && (
-            <LoginSheet
-              onClose={() => {
-                setShowLogin(false);
-                onClose(); // Close sidebar after login
-              }}
-              onLogin={handleLoginSuccess} // Handle login success
-            />
           )}
         </div>
       </div>
