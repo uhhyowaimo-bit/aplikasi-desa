@@ -1,54 +1,29 @@
-"use client"; // Tambahkan ini di bagian atas
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+const AppContext = createContext(null);
 
-// Mendefinisikan tipe untuk Context
-interface AppContextProps {
-  rtl: boolean;
-  dark: boolean;
-  lang: string;
-  toggleRtl: () => void;
-  toggleDark: () => void;
-  toggleLang: () => void;
-}
+export const useAppContext = () => useContext(AppContext);
 
-// Membuat Context
-const AppContext = createContext<AppContextProps | undefined>(undefined);
+export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const [dark, setDark] = useState(false);
 
-// Hook untuk mengakses AppContext
-export const useAppContext = () => {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useAppContext must be used within an AppProvider");
-  }
-  return context;
-};
+  // Mengambil mode gelap dari localStorage saat aplikasi dimuat
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode === "true") {
+      setDark(true);
+    }
+  }, []);
 
-// Menyediakan context untuk aplikasi
-export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [dark, setDark] = useState(false); // Status dark mode
-  const [rtl, setRtl] = useState(false); // Status RTL
-  const [lang, setLang] = useState("id"); // Status bahasa
-
-  // Toggle Dark mode
+  // Fungsi untuk mengubah dark mode
   const toggleDark = () => {
-    setDark((prev) => !prev);
-    document.documentElement.classList.toggle("dark", !dark); // Toggle class dark di root
-  };
-
-  // Toggle RTL
-  const toggleRtl = () => {
-    setRtl((prev) => !prev);
-    document.documentElement.setAttribute("dir", rtl ? "ltr" : "rtl");
-  };
-
-  // Toggle bahasa
-  const toggleLang = () => {
-    setLang(lang === "id" ? "en" : "id");
+    const newDark = !dark;
+    setDark(newDark);
+    localStorage.setItem("darkMode", newDark ? "true" : "false");
   };
 
   return (
-    <AppContext.Provider value={{ dark, rtl, lang, toggleDark, toggleRtl, toggleLang }}>
+    <AppContext.Provider value={{ dark, toggleDark }}>
       {children}
     </AppContext.Provider>
   );
