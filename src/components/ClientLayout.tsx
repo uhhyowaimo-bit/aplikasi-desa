@@ -7,12 +7,13 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext();
+  const { dark } = useAppContext(); // You can keep using this if you want to retain global dark mode context
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [darkMode, setDarkMode] = useState(false); // State for managing dark mode
 
   useEffect(() => {
     setMounted(true);
@@ -20,6 +21,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
+
+    // Automatically set dark mode based on system preference or custom logic
+    const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setDarkMode(systemPreference); // Or set it based on other logic if needed
   }, []);
 
   useEffect(() => {
@@ -47,9 +52,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+    // Clear session data
+    localStorage.clear(); // Clears all local storage
+    sessionStorage.clear(); // Clears session storage
     setIsLoggedIn(false);
-    window.location.reload();
+    setCountdown("");
+    setDarkMode(false); // Reset dark mode on logout
+    window.location.reload(); // Reload page to reset all states and localStorage
   };
 
   return (
@@ -60,8 +69,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           position: "sticky",
           top: 0,
           zIndex: 100,
-          background: dark ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
-          color: dark ? "#fff" : "#111",
+          background: darkMode ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
+          color: darkMode ? "#fff" : "#111",
           padding: "10px 15px",
           borderRadius: "0 0 8px 8px",
           display: "flex",
@@ -102,7 +111,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2000,
-            background: dark ? "#444" : "#6a11cb",
+            background: darkMode ? "#444" : "#6a11cb",
             color: "#fff",
             border: "none",
             padding: "10px 15px",
@@ -121,8 +130,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: dark ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
-          color: dark ? "#fff" : "#111",
+          backgroundColor: darkMode ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          color: darkMode ? "#fff" : "#111",
           padding: "20px", // Tambahkan padding jika diperlukan
         }}
       >
