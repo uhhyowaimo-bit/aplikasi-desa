@@ -1,37 +1,55 @@
-"use client"; // Menandakan bahwa file ini untuk sisi-klien
+"use client"; // Tambahkan ini di bagian atas
 
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
-// Tipe untuk Context
-interface AppContextType {
+// Mendefinisikan tipe untuk Context
+interface AppContextProps {
+  rtl: boolean;
   dark: boolean;
-  toggleDark: (value: boolean) => void;
+  lang: string;
+  toggleRtl: () => void;
+  toggleDark: () => void;
+  toggleLang: () => void;
 }
 
-// Membuat context dengan nilai default null
-const AppContext = createContext<AppContextType | null>(null);
+// Membuat Context
+const AppContext = createContext<AppContextProps | undefined>(undefined);
 
-// Provider untuk AppContext
-export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [dark, setDark] = useState(false); // Status default untuk mode gelap
-
-  const toggleDark = (value: boolean) => {
-    setDark(value);
-    localStorage.setItem("darkMode", value.toString()); // Simpan ke localStorage
-  };
-
-  return (
-    <AppContext.Provider value={{ dark, toggleDark }}>
-      {children}
-    </AppContext.Provider>
-  );
-};
-
-// Hook untuk menggunakan context
+// Hook untuk mengakses AppContext
 export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error("useAppContext must be used within an AppContextProvider");
+    throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
+};
+
+// Menyediakan context untuk aplikasi
+export const AppProvider = ({ children }: { children: ReactNode }) => {
+  const [dark, setDark] = useState(false); // Status dark mode
+  const [rtl, setRtl] = useState(false); // Status RTL
+  const [lang, setLang] = useState("id"); // Status bahasa
+
+  // Toggle Dark mode
+  const toggleDark = () => {
+    setDark((prev) => !prev);
+    document.documentElement.classList.toggle("dark", !dark); // Toggle class dark di root
+  };
+
+  // Toggle RTL
+  const toggleRtl = () => {
+    setRtl((prev) => !prev);
+    document.documentElement.setAttribute("dir", rtl ? "ltr" : "rtl");
+  };
+
+  // Toggle bahasa
+  const toggleLang = () => {
+    setLang(lang === "id" ? "en" : "id");
+  };
+
+  return (
+    <AppContext.Provider value={{ dark, rtl, lang, toggleDark, toggleRtl, toggleLang }}>
+      {children}
+    </AppContext.Provider>
+  );
 };
