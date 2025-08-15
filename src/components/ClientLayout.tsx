@@ -7,13 +7,13 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext(); // You can keep using this if you want to retain global dark mode context
+  const { dark } = useAppContext(); // Keep dark mode context
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [darkMode, setDarkMode] = useState(false); // State for managing dark mode
+  const [darkMode, setDarkMode] = useState(false); // Local state for dark mode
 
   useEffect(() => {
     setMounted(true);
@@ -22,29 +22,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setIsLoggedIn(true);
     }
 
-    // Automatically set dark mode based on system preference or custom logic
+    // Automatically set dark mode based on system preference
     const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDarkMode(systemPreference); // Or set it based on other logic if needed
+    setDarkMode(systemPreference);
   }, []);
 
+  // Apply dark mode to the whole page by adding/removing class on <body>
   useEffect(() => {
-    const targetDate = new Date("2025-08-17T00:00:00").getTime();
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance <= 0) {
-        setCountdown("Hari Proklamasi Telah Tiba!");
-        clearInterval(interval);
-        return;
-      }
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   const handleLoginOpen = () => {
     setShowLogin(true);
@@ -52,13 +42,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   const handleLogout = () => {
-    // Clear session data
     localStorage.clear(); // Clears all local storage
     sessionStorage.clear(); // Clears session storage
     setIsLoggedIn(false);
     setCountdown("");
-    setDarkMode(false); // Reset dark mode on logout
-    window.location.reload(); // Reload page to reset all states and localStorage
+    setDarkMode(false); // Reset dark mode
+    window.location.reload();
   };
 
   return (
@@ -130,9 +119,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: darkMode ? "#111" : "#fff", // Ganti dengan warna abu-abu saat dark mode
+          backgroundColor: darkMode ? "#111" : "#fff", // Apply dark mode color
           color: darkMode ? "#fff" : "#111",
-          padding: "20px", // Tambahkan padding jika diperlukan
+          padding: "20px",
         }}
       >
         {children}
