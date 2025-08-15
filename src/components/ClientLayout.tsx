@@ -116,7 +116,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       )}
 
       {/* SIDEBAR */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar 
+  isOpen={sidebarOpen} 
+  onClose={() => setSidebarOpen(false)} 
+  setDarkMode={setDarkMode} 
+  isLoggedIn={isLoggedIn} 
+  setShowLogin={setShowLogin} 
+/>
+
 
       {/* MAIN CONTENT */}
       <main
