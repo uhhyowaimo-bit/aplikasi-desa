@@ -176,5 +176,4 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, onClose, setDarkMode, isLoggedIn, s
     </div>
   );
 };
-
 export default Sidebar;
