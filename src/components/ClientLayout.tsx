@@ -35,6 +35,26 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
   }, [darkMode]);
 
+  // Countdown logic
+  useEffect(() => {
+    const targetDate = new Date("2025-08-17T00:00:00").getTime();
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance <= 0) {
+        setCountdown("Hari Proklamasi Telah Tiba!");
+        clearInterval(interval);
+        return;
+      }
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleLoginOpen = () => {
     setShowLogin(true);
     setSidebarOpen(false);
@@ -118,7 +138,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         onClose={() => setSidebarOpen(false)} 
         setDarkMode={setDarkMode} 
         isLoggedIn={isLoggedIn} 
-        setShowLogin={setShowLogin} // Passing setShowLogin
+        setShowLogin={setShowLogin} 
       />
 
       {/* MAIN CONTENT */}
