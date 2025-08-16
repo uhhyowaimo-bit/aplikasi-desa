@@ -1,4 +1,4 @@
-'use client';
+
 import React, { useEffect } from 'react';
 import { useAppContext } from '@/context/AppContext'; // Mengambil context dark mode
 
@@ -27,7 +27,7 @@ const MaintenancePage = () => {
           marginBottom: '20px',
         }}
       >
-        We're Currently Under Maintenance
+        We are Currently Under Maintenance
       </h2>
       <div
         style={{
