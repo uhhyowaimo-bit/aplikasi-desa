@@ -7,23 +7,24 @@ export default function BottomNav() {
   const menu = [
     { href: "/beranda", label: "Beranda", icon: "🏠" },
     { href: "/layanan-informasi", label: "Layanan Desaku", icon: "📄" },
-    { href: "/profil-desa", label: "Profil Desa", icon: "🏡" },
+    { href: "/maintenance", label: "Profil Desa", icon: "🏡" },
   ];
 
   return (
     <nav
       style={{
         position: "fixed",
-        bottom: "20px",
+        bottom: "0",
         left: "50%",
         transform: "translateX(-50%)",
-        width: "90%",
-        maxWidth: "500px",
+        width: "100%",
+        maxWidth: "500px", // Batas lebar maksimum untuk bottom nav
         background: "#ffffff",
         borderRadius: "15px",
         boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
         display: "flex",
         justifyContent: "space-around",
+        alignItems: "center", // Menyelaraskan item vertikal di tengah
         padding: "10px 0",
         zIndex: 1000,
       }}
@@ -38,9 +39,12 @@ export default function BottomNav() {
             color: pathname === item.href ? "#5B2C91" : "#555",
             fontWeight: pathname === item.href ? "bold" : "normal",
             fontSize: "14px",
+            display: "flex", 
+            flexDirection: "column", // Menyusun icon dan label secara vertikal
+            alignItems: "center", 
           }}
         >
-          <div style={{ fontSize: "22px" }}>{item.icon}</div>
+          <div style={{ fontSize: "22px", marginBottom: "5px" }}>{item.icon}</div> {/* Memberikan jarak antara icon dan label */}
           <div>{item.label}</div>
         </a>
       ))}
