@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
@@ -6,13 +6,12 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext(); // Menjaga konteks mode gelap global
+  const { dark } = useAppContext(); // Mengambil nilai dark mode dari AppContext
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [darkMode, setDarkMode] = useState(false); // Mengelola state mode gelap
 
   useEffect(() => {
     setMounted(true);
@@ -20,10 +19,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
-
-    // Mengatur mode gelap otomatis berdasarkan preferensi sistem
-    const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDarkMode(systemPreference); // Atau bisa diatur berdasarkan logika lain
   }, []);
 
   useEffect(() => {
@@ -51,13 +46,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   const handleLogout = () => {
-    // Menghapus data sesi
-    localStorage.clear(); // Menghapus seluruh local storage
-    sessionStorage.clear(); // Menghapus sesi storage
+    localStorage.clear();
+    sessionStorage.clear();
     setIsLoggedIn(false);
     setCountdown("");
-    setDarkMode(false); // Reset mode gelap setelah logout
-    window.location.reload(); // Reload halaman untuk mereset semua state dan localStorage
+    window.location.reload();
   };
 
   return (
@@ -65,11 +58,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* HEADER */}
       <header
         style={{
+          border: "none", // Menghilangkan border
           position: "sticky",
           top: 0,
           zIndex: 100,
-          background: darkMode ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
-          color: darkMode ? "#fff" : "#111",
+          background: dark ? "linear-gradient(90deg, #444, #555)" : "linear-gradient(90deg, #6a11cb, #2575fc)",
+          color: dark ? "#fff" : "#111",
           padding: "10px 15px",
           borderRadius: "0 0 8px 8px",
           display: "flex",
@@ -87,6 +81,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               height: "45px",
               marginRight: "10px",
               borderRadius: "50%",
+              border: "none", // Menghilangkan border
             }}
           />
           <h3 style={{ margin: 0, fontSize: "20px" }}>Website Desa</h3>
@@ -111,7 +106,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2000,
-            background: darkMode ? "#444" : "#6a11cb",
+            background: dark ? "#444" : "#6a11cb",
             color: "#fff",
             border: "none",
             padding: "10px 15px",
@@ -130,12 +125,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* MAIN CONTENT */}
       <main
         style={{
-          backgroundColor: darkMode ? "#111" : "#fff",
-          color: darkMode ? "#fff" : "#111",
-          padding: "20px", // Padding ditambahkan agar lebih responsif
+          backgroundColor: dark ? "#111" : "#fff",
+          color: dark ? "#fff" : "#111",
+          padding: "20px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          minHeight: "100vh", // Memastikan main memenuhi layar
         }}
       >
         {children}
