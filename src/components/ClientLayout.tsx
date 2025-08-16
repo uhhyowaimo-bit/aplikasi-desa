@@ -41,8 +41,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, []);
 
   const handleLoginOpen = () => {
-    setShowLogin(true);  // Menampilkan login sheet
-    setSidebarOpen(false); // Menutup sidebar jika diperlukan
+    setShowLogin(true);  
+    setSidebarOpen(false); 
   };
 
   const handleLogout = () => {
@@ -58,7 +58,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* HEADER */}
       <header
         style={{
-          border: "none", // Menghilangkan border
+          border: "none", 
           position: "sticky",
           top: 0,
           zIndex: 100,
@@ -81,7 +81,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               height: "45px",
               marginRight: "10px",
               borderRadius: "50%",
-              border: "none", // Menghilangkan border
+              border: "none", 
             }}
           />
           <h3 style={{ margin: 0, fontSize: "20px" }}>Website Desa</h3>
@@ -101,10 +101,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <button
           onClick={() => setSidebarOpen(true)}
           style={{
-            position: "fixed",
-            right: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
+            position: "fixed",  
+            right: "20px",  
+            top: "50%",  
+            transform: "translateY(-50%)",  
             zIndex: 2000,
             background: dark ? "#444" : "#6a11cb",
             color: "#fff",
@@ -113,6 +113,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             borderTopLeftRadius: "8px",
             borderBottomLeftRadius: "8px",
             cursor: "pointer",
+            width: "40px",  
+            height: "40px", 
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "50%",  
           }}
         >
           🍔
@@ -121,28 +127,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
       {/* SIDEBAR */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-      {/* LOGIN BUTTON */}
-      {!isLoggedIn && (
-        <button
-          onClick={handleLoginOpen} // Memanggil handleLoginOpen untuk membuka login sheet
-          style={{
-            position: "fixed",
-            bottom: "20px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 100,
-            background: "#6a11cb",
-            color: "#fff",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          Login
-        </button>
-      )}
 
       {/* MAIN CONTENT */}
       <main
@@ -153,7 +137,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          minHeight: "100vh", // Memastikan main memenuhi layar
+          minHeight: "100vh",  
+          flexGrow: 1,
+          overflowX: "hidden", 
         }}
       >
         {children}
@@ -186,6 +172,78 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           Logout
         </button>
       )}
+
+      {/* RESPONSIVE STYLES */}
+      <style jsx>{`
+        @media (min-width: 1024px) {
+          header {
+            padding: 20px;
+          }
+
+          main {
+            padding: 40px;
+          }
+
+          button {
+            width: auto;
+            padding: 12px 20px;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          header {
+            padding: 15px;
+          }
+
+          main {
+            padding: 30px;
+          }
+
+          button {
+            width: 100%;
+            padding: 12px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          main {
+            padding: 20px;
+          }
+
+          .sidebar {
+            width: 100%;
+          }
+
+          button {
+            width: 100%;
+            padding: 12px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          header {
+            padding: 10px;
+          }
+
+          main {
+            padding: 15px;
+          }
+
+          button {
+            padding: 10px;
+          }
+
+          header img {
+            width: 35px;
+            height: 35px;
+          }
+        }
+      `}</style>
     </>
   );
 }
