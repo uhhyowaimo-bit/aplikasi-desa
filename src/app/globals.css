@@ -1,11 +1,15 @@
 /* Global Styles */
-body {
-  margin: 0; /* Menghilangkan margin default pada body */
-  padding: 0; /* Menghilangkan padding default pada body */
-  transition: background-color 0.3s ease, color 0.3s ease;
-  font-family: Arial, sans-serif; /* Menetapkan font yang nyaman */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Mengatur agar body memenuhi tinggi halaman */
+  width: 100%; /* Mengatur agar body memenuhi lebar halaman */
+  background-color: #111; /* Latar belakang gelap untuk dark mode */
+  color: #fff; /* Warna teks default putih untuk dark mode */
+  font-family: Arial, sans-serif;
 }
 
+/* Mengatur warna latar belakang berdasarkan mode gelap */
 body.light-mode {
   background-color: #fff;
   color: #111;
@@ -16,18 +20,20 @@ body.dark-mode {
   color: #fff;
 }
 
+/* Membuat link terlihat sesuai dengan tema */
 a {
-  color: inherit; /* Agar warna link mengikuti mode */
-  text-decoration: none; /* Menghilangkan garis bawah link jika ada */
+  color: inherit; /* Warna link mengikuti mode */
+  text-decoration: none;
 }
 
+/* Button styling */
 button {
-  background-color: #6a11cb; /* Warna default untuk button */
+  background-color: #6a11cb;
   color: #fff;
   border: none;
   padding: 10px 15px;
   cursor: pointer;
-  border-radius: 8px; /* Rounded corners for buttons */
+  border-radius: 8px;
 }
 
 button.dark-mode {
@@ -35,14 +41,18 @@ button.dark-mode {
 }
 
 button:hover {
-  background-color: #2575fc; /* Hover effect */
+  background-color: #2575fc;
 }
 
+/* Styling untuk header */
 header {
-  transition: background 0.3s ease, color 0.3s ease;
-  padding: 10px 15px;
+  position: sticky;
+  top: 0;
   z-index: 1000;
-  width: 100%;
+  background: #444; /* Dark mode background */
+  color: #fff; /* White text */
+  padding: 10px 15px;
+  border-radius: 0 0 8px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,25 +63,16 @@ header h3 {
   font-size: 20px;
 }
 
-header img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-/* Menghilangkan margin atau padding pada seluruh elemen utama */
+/* Styling untuk main content */
 main {
   margin: 0;
-  padding: 20px; /* Padding added for better spacing */
+  padding: 0;
   width: 100%;
-  height: 100%;
-  background-color: inherit; /* Follows light/dark mode background */
-  color: inherit; /* Follows light/dark mode color */
-}
-
-html, body {
-  height: 100%; /* Pastikan seluruh halaman mengisi area */
+  background-color: inherit; /* Mengikuti background mode */
+  color: inherit; /* Mengikuti warna teks mode */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Sidebar */
@@ -91,21 +92,6 @@ html, body {
 
 .sidebar.open {
   transform: translateX(0);
-}
-
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  margin: 10px 0;
-}
-
-.sidebar ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 16px;
 }
 
 /* Bottom Navigation */
@@ -129,7 +115,6 @@ html, body {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   header {
-    padding: 10px;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -138,52 +123,15 @@ html, body {
     margin-bottom: 10px;
   }
 
-  main {
-    padding: 15px;
-  }
-
   .sidebar {
-    width: 200px; /* Reduce sidebar width on mobile */
-    transform: translateX(-100%); /* Ensure sidebar is hidden by default */
-  }
-
-  .sidebar.open {
-    transform: translateX(0); /* Show sidebar when open */
+    width: 200px;
   }
 
   .bottom-nav {
     padding: 15px 0;
   }
 
-  .bottom-nav a {
-    font-size: 14px; /* Reduce text size for bottom nav on mobile */
-  }
-
   button {
-    width: 100%; /* Make buttons full-width on smaller screens */
-  }
-}
-
-/* Extra small devices */
-@media (max-width: 480px) {
-  header h3 {
-    font-size: 18px;
-  }
-
-  header img {
-    width: 35px;
-    height: 35px;
-  }
-
-  .sidebar {
-    width: 180px; /* Further reduce sidebar width */
-  }
-
-  .bottom-nav a {
-    font-size: 12px; /* Reduce font size even further */
-  }
-
-  button {
-    padding: 12px 20px; /* Adjust button padding */
+    width: 100%;
   }
 }
