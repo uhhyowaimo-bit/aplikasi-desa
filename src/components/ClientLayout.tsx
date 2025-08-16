@@ -6,7 +6,7 @@ import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const { dark } = useAppContext(); // Mengambil nilai dark mode dari AppContext
+  const { dark } = useAppContext();
   const [countdown, setCountdown] = useState("");
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -41,8 +41,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, []);
 
   const handleLoginOpen = () => {
-    setShowLogin(true);
-    setSidebarOpen(false);
+    setShowLogin(true);  // Menampilkan login sheet
+    setSidebarOpen(false); // Menutup sidebar jika diperlukan
   };
 
   const handleLogout = () => {
@@ -121,6 +121,28 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
       {/* SIDEBAR */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* LOGIN BUTTON */}
+      {!isLoggedIn && (
+        <button
+          onClick={handleLoginOpen} // Memanggil handleLoginOpen untuk membuka login sheet
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 100,
+            background: "#6a11cb",
+            color: "#fff",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          Login
+        </button>
+      )}
 
       {/* MAIN CONTENT */}
       <main
