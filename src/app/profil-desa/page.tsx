@@ -1,142 +1,183 @@
-"use client";
-import React, { useState, useRef, useEffect } from "react";
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { useAppContext } from '@/context/AppContext';
+import ProfilDesa from '@/components/ProfilDesa/ProfilDesa';
+import Pemerintahan from '@/components/ProfilDesa/Pemerintahan';
+import DataDesa from '@/components/ProfilDesa/DataDesa';
+import PrestasiInstansi from '@/components/ProfilDesa/PrestasiInstansi';
+import PetaDesa from '@/components/ProfilDesa/PetaDesa';
+import InovasiDesa from '@/components/ProfilDesa/InovasiDesa';
+import SDGS from '@/components/ProfilDesa/SDGS';
+import IDM from '@/components/ProfilDesa/IDM';
+
+const menuItems = [
+  { title: 'Profil Desa', component: <ProfilDesa />, color: '#f97316', icon: '🏠' },
+  { title: 'Pemerintahan', component: <Pemerintahan />, color: '#a3a3a3', icon: '🏛️' },
+  { title: 'Data Desa', component: <DataDesa />, color: '#4ade80', icon: '📊' },
+  { title: 'Peta', component: <PetaDesa />, color: '#ef4444', icon: '🗺️' },
+  { title: 'Prestasi Instansi', component: <PrestasiInstansi />, color: '#60a5fa', icon: '🏆' },
+  { title: 'Inovasi Desa', component: <InovasiDesa />, color: '#0f172a', icon: '💡' },
+  { title: 'SDGS', component: <SDGS />, color: '#facc15', icon: '🌱' },
+  { title: 'IDM', component: <IDM />, color: '#f59e0b', icon: '📅' },
+];
 
 export default function LayananPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const layerRef = useRef<HTMLDivElement | null>(null);
+  const { dark } = useAppContext();
 
-  const menuItems = [
-    { title: "Profil Desa", icon: "🏠", content: " Pemberian nama Kampale sudah terbentuk sejak pemerintahan Kepala Kampung Lamakkarennu Tahun 1930. Nama Kampale ini adalah hasil kesepakatan para kepala suku kampung saat itu. Kampale merupakan tempat pusat pemerintahan dari tahun 1930 sampai 1942. Tahun 1943 Kepala Kampung Lamakkarennu meninggal dunia lalu digantikan Andi Kancilu. Andi Kancilu saat itu bertempat tinggal di Kalosi, sehingga pusat pemerintahan pindah di Kalosi. Terjadinya pembentukan atau pemekaran desa, karena pada dasarnya masyarakat Kampale sudah memenuhi persyaratan untuk memisahkan diri dan membentuk satu desa, hal ini untuk memudahkan masyarakat Kampale mengurus segala keperluannya. Sehingga para pemuka agama dan masyarakat mengadakan rapat untuk mengusulkan kepada Desa Induk (Desa Kalosi) untuk rencana pemekaran desa. Jadi Kepala Desa Kalosi terpaksa mengadakan musyawarah dengan tokoh agama, masyarakat dan anggota BPD, lalu mengajukan usulan kepada Camat Dua Pitue sehingga terbitlah Surat Camat Dua Pitue No. 893../26/VII/PEM/Tanggal 31 Juli 2009.Terlampir Berita Acara rapat penetapan Kepala Desa Sementara dan SK Kepala Desa Terpilih (Defentif) Desa Kampale Kecamatan Dua Pitue, Kabupaten Sidenreng Rappang. Demikian sejarah terbentuknya Desa Kampale. ", color: "#f97316" },
-    { title: "Pemerintahan", icon: "🏛️", content: "Struktur pemerintahan desa.", color: "#a3a3a3" },
-    { title: "Data Desa", icon: "📊", content: "Statistik dan data terkini.", color: "#4ade80" },
-    { title: "Regulasi", icon: "📜", content: "Peraturan dan kebijakan.", color: "#fde047" },
-    { title: "Peta", icon: "🗺️", content: "Peta lokasi penting.", color: "#ef4444" },
-    { title: "PPID", icon: "📑", content: "Layanan informasi publik.", color: "#60a5fa" },
-    { title: "Prestasi Instansi", icon: "🏆", content: "Daftar prestasi desa.", color: "#8b5cf6" },
-    { title: "Inovasi Desa", icon: "💡", content: "Program inovasi desa.", color: "#0f172a" },
-    { title: "E-Paper DKA", icon: "📰", content: "Publikasi digital DKA.", color: "#b91c1c" },
-    { title: "SDGS", icon: "🌱", content: "Pembangunan berkelanjutan.", color: "#facc15" },
-    { title: "IDM 2023", icon: "📅", content: "Indeks Desa Membangun.", color: "#f59e0b" },
-  ];
-
-  const handleItemClick = (index: number) => {
-    setActiveIndex(index === activeIndex ? null : index);
+  const colors = {
+    bg: dark ? '#0b0b0b' : '#f6f7f8',
+    surface: dark ? '#141414' : '#ffffff',
+    text: dark ? '#f4f4f5' : '#0f0f10',
+    sub: dark ? '#bababa' : '#5b5b5b',
   };
 
-  // Close when clicking outside the layer
+  // Lock scroll saat modal terbuka + support tombol Esc
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (layerRef.current && !layerRef.current.contains(event.target as Node)) {
-        setActiveIndex(null);
-      }
-    };
-    if (activeIndex !== null) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    if (activeIndex !== null) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setActiveIndex(null);
+    window.addEventListener('keydown', onKey);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
     };
   }, [activeIndex]);
 
   return (
-    <div style={{ padding: "20px", position: "relative", minHeight: "100vh" }}>
-      <h2 style={{ marginBottom: "15px", fontSize: "24px", fontWeight: "bold" }}>Menu Utama</h2>
+    <main className="page" style={{ background: colors.bg, color: colors.text }}>
+      <div className="container">
+        <header className="header">
+          <h1>Menu Utama</h1>
+          <p className="sub">Pilih salah satu menu di bawah untuk menampilkan kontennya.</p>
+        </header>
 
-      {/* Responsive Grid */}
-      <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: "15px",
-    width: "100%",
-  }}
->
-       {menuItems.map((item, index) => (
-    <div
-      key={index}
-      onClick={() => handleItemClick(index)}
-      style={{
-        background: item.color,
-        borderRadius: "12px",
-        aspectRatio: "1 / 1",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: "pointer",
-        color: "#fff",
-        fontSize: "28px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-        transition: "transform 0.2s ease",
-        padding: "10px",
-        textAlign: "center",
-      }}
-    >
-           <div style={{ fontSize: "32px" }}>{item.icon}</div>
-      <p style={{ marginTop: "10px", fontWeight: "600", fontSize: "14px" }}>{item.title}</p>
-          </div>
-        ))}
+        <div className="grid">
+          {menuItems.map((item, i) => {
+            const active = i === activeIndex;
+            return (
+              <button
+                key={i}
+                className={`card ${active ? 'active' : ''}`}
+                style={{ background: item.color }}
+                onClick={() => setActiveIndex(active ? null : i)}
+                aria-pressed={active}
+              >
+                <span className="icon">{item.icon}</span>
+                <span className="title">{item.title}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Floating Layer */}
-      {activeIndex !== null && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            height: "100vh",
-            width: "100vw",
-            background: "rgba(0,0,0,0.4)",
-            zIndex: 15,
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            paddingTop: "120px",
-          }}
-        >
-          <div
-            ref={layerRef}
-            style={{
-              background: menuItems[activeIndex].color,
-              width: "90%",
-              maxWidth: "900px",
-              minHeight: "320px",
-              borderRadius: "16px",
-              padding: "50px",
-              color: "#fff",
-              position: "relative",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
-              animation: "popIn 0.3s ease",
-            }}
-          >
-            {/* Floating Icon (baru, tidak mengganggu ikon asal) */}
-            <div
-              style={{
-                position: "absolute",
-                top: "-35px",
-                left: "30px",
-                fontSize: "40px",
-                background: "#fff",
-                borderRadius: "50%",
-                width: "70px",
-                height: "70px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-              }}
-            >
-              {menuItems[activeIndex].icon}
-            </div>
-
-            <h3 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "15px" }}>
-              {menuItems[activeIndex].title}
-            </h3>
-            <p style={{ fontSize: "18px" }}>{menuItems[activeIndex].content}</p>
-          </div>
-        </div>
-      )}
+     {/* ===== MODAL OVERLAY DI TENGAH LAYAR (TANPA KOTAK & TANPA X) ===== */}
+{activeIndex !== null && (
+  <div
+    className="overlay"
+    role="dialog"
+    aria-modal="true"
+    onClick={() => setActiveIndex(null)} // klik backdrop = tutup
+  >
+    {/* Shell hanya untuk center & scroll; TIDAK ada background */}
+    <div
+      className="contentShell"
+      onClick={(e) => e.stopPropagation()} // biar klik dalam tidak nutup
+    >
+      {/* Yang tampil cuma komponennya */}
+      <div className="contentBody">
+        {menuItems[activeIndex].component}
+      </div>
     </div>
+  </div>
+)}
+
+
+     <style jsx>{`
+  .page { 
+    min-height: 100dvh;
+    background: transparent !important; /* 🔥 hapus hitam full */ 
+  }
+
+  /* Container transparan (hilangkan kotak hitam di belakang ikon) */
+  .container {
+  width: 100%;
+  max-width: 1280px;
+  padding: 24px 16px 40px;
+  margin: 0 auto;
+
+  background: transparent;  /* 🔥 hilangin kotak hitam full */
+}
+
+
+  .header { text-align: center; margin-bottom: 20px; }
+  h1 { font-weight: 800; margin: 0; font-size: clamp(20px, 2.2vw, 28px); }
+  .sub { margin-top: 6px; color: ${colors.sub}; font-size: clamp(12px, 1.4vw, 14px); }
+
+  /* GRID RESPONSIF */
+  .grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1280px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+  .card {
+    appearance: none;
+    border: 0;
+    border-radius: 16px;
+    color: #fff;
+    min-height: 140px;
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,.22);
+    transition: transform .18s ease, box-shadow .22s ease, opacity .18s ease;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.32); }
+  .card.active { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.38); }
+
+  .icon { font-size: 34px; line-height: 1; }
+  .title { margin-top: 10px; font-weight: 700; font-size: 16px; line-height: 1.2; }
+
+  /* OVERLAY */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.45); /* backdrop tipis */
+    z-index: 1000;
+    animation: fadeIn .2s ease;
+    padding: 16px; /* aman di layar kecil */
+  }
+
+  /* Shell transparan untuk center & scroll */
+  .contentShell {
+    width: min(96vw, 1100px);
+    max-height: 88vh;
+    overflow: auto; /* biar bisa scroll */
+    position: relative;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+  }
+
+  /* Body: tampilkan komponen langsung */
+  .contentBody {}
+
+  /* Animasi */
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+`}</style>
+
+    </main>
   );
 }
