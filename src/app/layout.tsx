@@ -1,5 +1,6 @@
 import { AppProvider } from "@/context/AppContext";
 import ClientLayout from "@/components/ClientLayout";
+import 'ol/ol.css';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
