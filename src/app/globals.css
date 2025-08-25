@@ -1,32 +1,137 @@
-:root {
-  --primary-color: #432874; /* Default color */
-  --button-color: #5e3ea1;
-  --text-color: #fff;
-  --background-color: #111; /* Dark background */
-}
-
-body {
-  background-color: var(--background-color);
-  color: var(--text-color);
+/* Global Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Mengatur agar body memenuhi tinggi halaman */
+  width: 100%; /* Mengatur agar body memenuhi lebar halaman */
+  background-color: #111; /* Latar belakang gelap untuk dark mode */
+  color: #fff; /* Warna teks default putih untuk dark mode */
   font-family: Arial, sans-serif;
 }
 
+/* Mengatur warna latar belakang berdasarkan mode gelap */
+body.light-mode {
+  background-color: #fff;
+  color: #111;
+}
+
+body.dark-mode {
+  background-color: #111;
+  color: #fff;
+}
+
+/* Membuat link terlihat sesuai dengan tema */
+a {
+  color: inherit; /* Warna link mengikuti mode */
+  text-decoration: none;
+}
+
+/* Button styling */
+button {
+  background-color: #6a11cb;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+button.dark-mode {
+  background-color: #444; /* Button untuk dark mode */
+}
+
+button:hover {
+  background-color: #2575fc;
+}
+
+/* Styling untuk header */
 header {
-  background-color: var(--primary-color);
-  color: var(--text-color);
-  padding: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #444; /* Dark mode background */
+  color: #fff; /* White text */
+  padding: 10px 15px;
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.button {
-  background-color: var(--button-color);
-  color: var(--text-color);
-  padding: 10px 20px;
-  border-radius: 5px;
+header h3 {
+  margin: 0;
+  font-size: 20px;
 }
 
-.footer {
-  background-color: var(--primary-color);
-  color: var(--text-color);
-  padding: 10px;
-  text-align: center;
+/* Styling untuk main content */
+main {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: inherit; /* Mengikuti background mode */
+  color: inherit; /* Mengikuti warna teks mode */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: #333;
+  color: white;
+  padding: 20px;
+  z-index: 999;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(-100%);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #333;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  color: white;
+}
+
+.bottom-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header img {
+    margin-bottom: 10px;
+  }
+
+  .sidebar {
+    width: 200px;
+  }
+
+  .bottom-nav {
+    padding: 15px 0;
+  }
+
+  button {
+    width: 100%;
+  }
 }

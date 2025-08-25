@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import { useAppContext } from "@/context/AppContext"; // Mengimpor useAppContext
 import LoginSheet from "@/components/LoginSheet"; // Sesuaikan path
@@ -14,7 +15,7 @@ export default function Sidebar({
   const [showLogin, setShowLogin] = useState(false); // Untuk menampilkan modal LoginSheet
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Status login
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { rtl, dark, lang, toggleRtl, toggleDark, toggleLang } = useAppContext();
+  const { dark, toggleDark } = useAppContext(); // Mengambil status dark mode dan fungsi untuk toggle
   const [stats, setStats] = useState({ daily: 0, weekly: 0, total: 0 });
   const [chartData, setChartData] = useState([
     { day: "Sen", visitors: 0 },
@@ -25,10 +26,12 @@ export default function Sidebar({
     { day: "Sab", visitors: 0 },
     { day: "Min", visitors: 0 },
   ]);
-  const [selectedColor, setSelectedColor] = useState("#432874"); // Default color
 
-  // Fungsi untuk menangani klik di luar sidebar dan ESC
+  // Menggunakan state untuk mengelola mode gelap
+  const [isDarkMode, setIsDarkMode] = useState(dark);
+
   useEffect(() => {
+    // Fungsi untuk menangani klik di luar sidebar dan ESC
     function handleClickOutside(e: MouseEvent) {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
         onClose();
@@ -49,12 +52,6 @@ export default function Sidebar({
       document.removeEventListener("keydown", handleEsc);
     };
   }, [isOpen, onClose]);
-
-  // Mengecek status login saat komponen dimuat
-  useEffect(() => {
-    const loggedInStatus = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedInStatus); // Update status login
-  }, []);
 
   // Fetch statistik pengunjung
   useEffect(() => {
@@ -81,23 +78,16 @@ export default function Sidebar({
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true); // Set status login ke true
-    localStorage.setItem("isLoggedIn", "true"); // Simpan status login di localStorage
     setShowLogin(false); // Menutup LoginSheet
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false); // Set status login ke false
-    localStorage.setItem("isLoggedIn", "false"); // Hapus status login di localStorage
+    setShowLogin(false); // Menutup LoginSheet jika masih terbuka
     window.location.reload(); // Menyegarkan halaman setelah logout
   };
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = e.target.value;
-    setSelectedColor(newColor);
-    // Update global CSS variable
-    document.documentElement.style.setProperty("--primary-color", newColor);
-  };
-
+  // Pastikan untuk menambahkan return null jika sidebar tidak terbuka
   if (!isOpen) return null;
 
   return (
@@ -116,7 +106,7 @@ export default function Sidebar({
         style={{
           height: "100%",
           width: "300px",
-          background: "#432874",
+          background: isDarkMode ? "#333" : "#432874", // Menggunakan warna gelap atau terang sesuai mode
           color: "#fff",
           padding: "20px",
           display: "flex",
@@ -124,48 +114,27 @@ export default function Sidebar({
           justifyContent: "space-between",
           boxShadow: "-3px 0 8px rgba(0,0,0,0.4)",
           overflow: "hidden",
-          transform: rtl ? "translateX(-100%)" : "translateX(0)",
         }}
       >
-        {/* Color Palette */}
+        {/* Dark Mode Toggle */}
         <div>
-          <h3>Choose Color Palette</h3>
-          <input
-            type="color"
-            value={selectedColor}
-            onChange={handleColorChange} // Set new color
-            style={{ padding: "5px", cursor: "pointer" }}
-          />
-        </div>
-
-        {/* Konten sidebar */}
-        <div style={{ flex: 1, overflowY: "auto", marginBottom: "20px" }}>
-          <h2>⚙️ {lang === "id" ? "Pengaturan" : "Settings"}</h2>
+          <h2>⚙️ Pengaturan</h2>
           <div>
             <label>
-              <input type="checkbox" checked={rtl} onChange={toggleRtl} /> RTL Mode
+              <input
+                type="checkbox"
+                checked={isDarkMode}
+                onChange={() => {
+                  setIsDarkMode(!isDarkMode); // Toggle dark mode
+                  toggleDark(); // Toggle dark mode globally
+                }}
+              />{" "}
+              {isDarkMode ? "🌙 Mode Gelap" : "🌞 Mode Terang"}
             </label>
-          </div>
-          <div>
-            <label>
-              <input type="checkbox" checked={dark} onChange={toggleDark} /> Dark Mode
-            </label>
-          </div>
-          <div>
-            Translate:
-            <button onClick={toggleLang} style={{ marginLeft: "8px" }}>
-              {lang.toUpperCase()}
-            </button>
-          </div>
-          <div>
-            <a href="/help" style={{ color: "#fff", textDecoration: "underline" }}>
-              ❓ {lang === "id" ? "Bantuan" : "Help"}
-            </a>
           </div>
 
-          <h3 style={{ fontSize: "16px", marginTop: "20px" }}>
-            📈 {lang === "id" ? "Statistik Pengunjung" : "Visitor Stats"}
-          </h3>
+          {/* Statistik Pengunjung */}
+          <h3 style={{ fontSize: "16px", marginTop: "20px" }}>📈 Statistik Pengunjung</h3>
           <p>Hari Ini: <b>{stats.daily}</b></p>
           <p>Minggu Ini: <b>{stats.weekly}</b></p>
           <p>Total: <b>{stats.total}</b></p>
@@ -189,7 +158,6 @@ export default function Sidebar({
               onClick={() => setShowLogin(true)}
               style={{
                 color: "#fff",
-                textDecoration: "none",
                 display: "block",
                 padding: "12px",
                 background: "#5e3ea1",
@@ -205,7 +173,6 @@ export default function Sidebar({
               onClick={handleLogout}
               style={{
                 color: "#fff",
-                textDecoration: "none",
                 display: "block",
                 padding: "12px",
                 background: "#e74c3c",

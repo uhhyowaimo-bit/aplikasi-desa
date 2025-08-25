@@ -1,55 +1,52 @@
-"use client"; // Tambahkan ini di bagian atas
+'use client';
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 
-// Mendefinisikan tipe untuk Context
-interface AppContextProps {
-  rtl: boolean;
+// Definisikan tipe untuk konteks kita
+interface AppContextType {
   dark: boolean;
-  lang: string;
-  toggleRtl: () => void;
   toggleDark: () => void;
-  toggleLang: () => void;
 }
 
-// Membuat Context
-const AppContext = createContext<AppContextProps | undefined>(undefined);
+const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Hook untuk mengakses AppContext
+export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const [dark, setDark] = useState(false);
+
+  // Mengambil state dari localStorage saat aplikasi dimuat
+  useEffect(() => {
+    const savedDark = localStorage.getItem("dark") === "true";
+    setDark(savedDark);
+  }, []);
+
+  // Menyimpan perubahan di localStorage
+  useEffect(() => {
+    localStorage.setItem("dark", dark.toString());
+    
+    // Mengubah kelas 'dark-mode' atau 'light-mode' pada html
+    if (dark) {
+      document.documentElement.classList.add("dark-mode");
+      document.documentElement.classList.remove("light-mode");
+    } else {
+      document.documentElement.classList.add("light-mode");
+      document.documentElement.classList.remove("dark-mode");
+    }
+  }, [dark]);
+
+  // Toggle dark mode
+  const toggleDark = () => setDark((prev) => !prev);
+
+  return (
+    <AppContext.Provider value={{ dark, toggleDark }}>
+      {children}
+    </AppContext.Provider>
+  );
+};
+
 export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context) {
     throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
-};
-
-// Menyediakan context untuk aplikasi
-export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [dark, setDark] = useState(false); // Status dark mode
-  const [rtl, setRtl] = useState(false); // Status RTL
-  const [lang, setLang] = useState("id"); // Status bahasa
-
-  // Toggle Dark mode
-  const toggleDark = () => {
-    setDark((prev) => !prev);
-    document.documentElement.classList.toggle("dark", !dark); // Toggle class dark di root
-  };
-
-  // Toggle RTL
-  const toggleRtl = () => {
-    setRtl((prev) => !prev);
-    document.documentElement.setAttribute("dir", rtl ? "ltr" : "rtl");
-  };
-
-  // Toggle bahasa
-  const toggleLang = () => {
-    setLang(lang === "id" ? "en" : "id");
-  };
-
-  return (
-    <AppContext.Provider value={{ dark, rtl, lang, toggleDark, toggleRtl, toggleLang }}>
-      {children}
-    </AppContext.Provider>
-  );
 };

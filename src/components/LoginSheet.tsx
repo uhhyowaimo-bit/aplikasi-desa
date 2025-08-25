@@ -61,16 +61,17 @@ export default function LoginSheet({ onClose, onLogin }: LoginSheetProps) {
           left: "50%",
           transform: "translateX(-50%)",
           width: "90%",
-          maxWidth: "500px",
+          maxWidth: "400px",
           background: "#fff",
           zIndex: 2000,
           borderTopLeftRadius: "16px",
           borderTopRightRadius: "16px",
           boxShadow: "0 -2px 10px rgba(0,0,0,0.3)",
+          padding: "20px",
         }}
       >
-        <h3 style={{ textAlign: "center" }}>Login Admin</h3>
-        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+        <h3 style={{ textAlign: "center", marginBottom: "20px" }}>Login Admin</h3>
+        {error && <p style={{ color: "red", textAlign: "center", marginBottom: "15px" }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -79,13 +80,12 @@ export default function LoginSheet({ onClose, onLogin }: LoginSheetProps) {
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={handleKeyDown}
             style={{
-              width: "90%",
+              width: "100%",
               padding: "10px",
-              marginBottom: "10px",
+              marginBottom: "15px",
               border: "1px solid #ccc",
               borderRadius: "5px",
               display: "block",
-              margin: "10px auto",
             }}
           />
           <input
@@ -95,25 +95,25 @@ export default function LoginSheet({ onClose, onLogin }: LoginSheetProps) {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyDown}
             style={{
-              width: "90%",
+              width: "100%",
               padding: "10px",
-              marginBottom: "10px",
+              marginBottom: "20px",
               border: "1px solid #ccc",
               borderRadius: "5px",
               display: "block",
-              margin: "10px auto",
             }}
           />
           <button
             type="submit"
             style={{
               width: "100%",
-              padding: "10px",
+              padding: "12px",
               background: "#5B2C91",
               color: "#fff",
               border: "none",
               borderRadius: "5px",
               cursor: "pointer",
+              fontSize: "16px",
             }}
           >
             Login
