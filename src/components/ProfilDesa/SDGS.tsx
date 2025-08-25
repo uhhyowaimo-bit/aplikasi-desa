@@ -21,7 +21,7 @@ const slides = [
   },
 ];
 
-const ProfilDesa = () => {
+const SDGS = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -207,4 +207,4 @@ const navBtnStyle = (side: 'left' | 'right'): React.CSSProperties => ({
   boxShadow: '0 4px 12px rgba(0,0,0,.25)',
 });
 
-export default ProfilDesa;
+export default SDGS;

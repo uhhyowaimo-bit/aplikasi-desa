@@ -6,7 +6,9 @@ const MaintenancePage = () => {
   const [mounted, setMounted] = useState(false);
   const { dark } = useAppContext(); // Mengambil nilai dark mode dari context
 
-  // Menghapus useEffect yang tidak digunakan
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div
@@ -14,8 +16,8 @@ const MaintenancePage = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
-        backgroundColor: dark ? '#111' : '#fff', // Sesuaikan dengan dark mode
+        minHeight: '100vh', // Pastikan halaman mengisi seluruh layar
+        backgroundColor: dark ? '#111' : '#fff',
         color: dark ? '#fff' : '#000',
         padding: '20px',
         flexDirection: 'column',
@@ -30,8 +32,9 @@ const MaintenancePage = () => {
           marginBottom: '20px',
         }}
       >
-        We&apos;re Currently Under Maintenance {/* Memperbaiki tanda petik */}
+        We&apos;re Currently Under Maintenance
       </h2>
+
       <div
         style={{
           textAlign: 'center',
