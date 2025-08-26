@@ -96,86 +96,161 @@ export default function LayananPage() {
 
      <style jsx>{`
   .page { 
-    min-height: 100dvh;
-    background: transparent !important; /* 🔥 hapus hitam full */ 
-  }
+  min-height: 100vh; /* Fix untuk layar penuh */
+  background: transparent !important;
+}
 
-  /* Container transparan (hilangkan kotak hitam di belakang ikon) */
-  .container {
+.container {
   width: 100%;
   max-width: 1280px;
   padding: 24px 16px 40px;
   margin: 0 auto;
-
-  background: transparent;  /* 🔥 hilangin kotak hitam full */
+  background: transparent;
 }
 
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  .header { text-align: center; margin-bottom: 20px; }
-  h1 { font-weight: 800; margin: 0; font-size: clamp(20px, 2.2vw, 28px); }
-  .sub { margin-top: 6px; color: ${colors.sub}; font-size: clamp(12px, 1.4vw, 14px); }
+h1 {
+  font-weight: 800;
+  margin: 0;
+  font-size: clamp(20px, 5vw, 28px); /* Responsif pada ukuran layar */
+}
 
-  /* GRID RESPONSIF */
+.sub {
+  margin-top: 6px;
+  color: ${colors.sub};
+  font-size: clamp(12px, 3vw, 16px); /* Responsif pada ukuran layar */
+}
+
+/* GRID RESPONSIF */
+.grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
   .grid {
-    display: grid;
-    gap: 18px;
+    grid-template-columns: repeat(2, 1fr); /* 2 kolom di perangkat lebih besar */
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 kolom untuk perangkat lebih besar */
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 kolom di desktop */
+  }
+}
+
+.card {
+  appearance: none;
+  border: 0;
+  border-radius: 16px;
+  color: #fff;
+  min-height: 140px;
+  padding: 24px 20px; /* Penambahan padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.22);
+  transition: transform .18s ease, box-shadow .22s ease, opacity .18s ease;
+  margin-bottom: 15px; /* Menambah jarak antar card */
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.32);
+}
+
+.card.active {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.38);
+}
+
+.icon {
+  font-size: 3rem; /* Ukuran ikon lebih besar */
+}
+
+.title {
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.45);
+  z-index: 1000;
+  animation: fadeIn .2s ease;
+  padding: 16px;
+}
+
+.contentShell {
+  width: min(96vw, 1100px);
+  max-height: 88vh;
+  overflow: auto;
+  position: relative;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+.contentBody {}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Image */
+img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+@media (max-width: 640px) {
+  /* Perbaikan untuk tampilan mobile */
+  .card {
+    padding: 20px 10px;
+    text-align: center;
+  }
+
+  .icon {
+    font-size: 2.5rem; /* Ukuran ikon lebih kecil di perangkat mobile */
+  }
+
+  .title {
+    font-size: 14px; /* Ukuran teks lebih kecil di perangkat mobile */
+  }
+
+  .grid {
     grid-template-columns: 1fr;
   }
-  @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (min-width: 1280px) { .grid { grid-template-columns: repeat(4, 1fr); } }
 
-  .card {
-    appearance: none;
-    border: 0;
-    border-radius: 16px;
-    color: #fff;
-    min-height: 140px;
-    padding: 22px 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 0 6px 16px rgba(0,0,0,.22);
-    transition: transform .18s ease, box-shadow .22s ease, opacity .18s ease;
-  }
-  .card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.32); }
-  .card.active { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.38); }
-
-  .icon { font-size: 34px; line-height: 1; }
-  .title { margin-top: 10px; font-weight: 700; font-size: 16px; line-height: 1.2; }
-
-  /* OVERLAY */
-  .overlay {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,.45); /* backdrop tipis */
-    z-index: 1000;
-    animation: fadeIn .2s ease;
-    padding: 16px; /* aman di layar kecil */
-  }
-
-  /* Shell transparan untuk center & scroll */
   .contentShell {
-    width: min(96vw, 1100px);
-    max-height: 88vh;
-    overflow: auto; /* biar bisa scroll */
-    position: relative;
-    background: transparent;
-    box-shadow: none;
-    border: none;
+    width: 90vw;
+    max-height: 85vh;
   }
+}
 
-  /* Body: tampilkan komponen langsung */
-  .contentBody {}
-
-  /* Animasi */
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 `}</style>
 
     </main>
