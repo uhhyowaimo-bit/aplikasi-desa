@@ -93,15 +93,13 @@ export default function LayananPage() {
   </div>
 )}
 
-
-<style jsx>{` 
+<style jsx>{`
   .page { 
     min-height: 100vh;
     background: transparent !important;
     display: flex;
     justify-content: center; /* Membuat konten berada di tengah */
-    align-items: flex-start; /* Menjaga konten tetap di atas */
-    flex-direction: column; /* Membuat semua konten berada dalam satu kolom */
+    align-items: flex-start;
   }
 
   .container {
