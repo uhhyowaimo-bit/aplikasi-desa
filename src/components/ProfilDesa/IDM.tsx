@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 
-
 // Data untuk Slide
 const slides = [
   {
@@ -37,14 +36,15 @@ const ProfilDesa = () => {
         borderRadius: 12,
         color: "#fff",
         width: "100%",
-        maxWidth: 600,
+        maxWidth: "100%",  // Adjusted for mobile responsiveness
         margin: "auto",
         boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
         transition: "transform 0.3s ease",
         position: "relative",
+        boxSizing: 'border-box', // To include padding in the width calculation
       }}
     >
-      <h3 style={{ fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 16 }}>
+      <h3 style={{ fontSize: "1.5rem", fontWeight: "bold", textAlign: "center", marginBottom: 16 }}>
         {s.title}
       </h3>
 
@@ -52,23 +52,27 @@ const ProfilDesa = () => {
       <div
         style={{
           display: "flex",
-          flexDirection: s.image ? "row" : "column", // kalau ada gambar → sejajar
+          flexDirection: s.image ? "row" : "column", // Kalau ada gambar → sejajar
           alignItems: "flex-start",
           gap: 16,
+          flexWrap: "wrap",  // Ensure content wraps on smaller screens
         }}
       >
-        <div style={{ flex: 1, fontSize: 16, textAlign: "justify" }}>{s.content}</div>
+        <div style={{ flex: 1, fontSize: "1rem", textAlign: "justify", wordBreak: "break-word" }}>
+          {s.content}
+        </div>
 
         {s.image && (
           <Image
-
             src={s.image}
             alt={s.title}
+            width={200}  // Adjusted width
+            height={150} // Adjusted height
             style={{
-              width: "45%",
-              height: "auto",
               borderRadius: 8,
               objectFit: "cover",
+              maxWidth: "100%",
+              height: "auto",
             }}
           />
         )}
@@ -88,7 +92,7 @@ const ProfilDesa = () => {
           borderRadius: 8,
           padding: "6px 10px",
           color: "#fff",
-          fontSize: 18,
+          fontSize: "1.5rem",
           cursor: "pointer",
         }}
       >
@@ -107,7 +111,7 @@ const ProfilDesa = () => {
           borderRadius: 8,
           padding: "6px 10px",
           color: "#fff",
-          fontSize: 18,
+          fontSize: "1.5rem",
           cursor: "pointer",
         }}
       >
