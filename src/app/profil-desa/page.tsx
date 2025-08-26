@@ -50,6 +50,7 @@ export default function LayananPage() {
       <div className="container">
         <header className="header">
           <h1>Profil Desa</h1>
+           <p className="sub">Berhubung masih dalam tahap maintenance masih banyak konten yang perlu dikembangkan dan ditambahkan</p>
         </header>
 
         <div className="grid">
