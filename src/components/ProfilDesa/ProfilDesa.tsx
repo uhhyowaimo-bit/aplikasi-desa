@@ -83,26 +83,23 @@ Waktu tempuh ke ibukota Provinsi	  : 4 Jam 30 Menit
 ];
 
 const ProfilDesa = () => {
-  const [currentSlide, setCurrentSlide] = useState(0); // Menyimpan indeks slide aktif
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // Untuk menampilkan atau menyembunyikan popup
-  const popupRef = useRef<HTMLDivElement | null>(null); // Reference untuk popup
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const popupRef = useRef<HTMLDivElement | null>(null);
 
-  // Fungsi untuk berpindah slide ke kanan
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length); // Menggunakan modulus untuk loop
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
-  // Fungsi untuk berpindah slide ke kiri
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length); // Menggunakan modulus untuk loop
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
-  // Menambahkan event listener ketika popup terbuka dan menghapusnya ketika tidak diperlukan
   useEffect(() => {
     if (isPopupOpen) {
-      document.addEventListener('mousedown', handleClickOutside); // Menutup popup ketika klik di luar
+      document.addEventListener('mousedown', handleClickOutside);
     } else {
-      document.removeEventListener('mousedown', handleClickOutside); // Menghapus event listener
+      document.removeEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
@@ -110,48 +107,60 @@ const ProfilDesa = () => {
     };
   }, [isPopupOpen]);
 
-  // Fungsi untuk menutup popup ketika klik di luar
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-      setIsPopupOpen(false); // Menutup popup
+      setIsPopupOpen(false);
     }
   };
 
-  // Fungsi untuk membuka popup
   const openPopup = () => {
     setIsPopupOpen(true);
   };
 
- return (
+  return (
     <div
       style={{
         padding: '20px',
-        background: s.color,
+        background: slides[currentSlide].color,
         borderRadius: '12px',
         color: '#fff',
         width: '100%',
-        maxWidth: '100%',
+        maxWidth: '100%', // Membuat kotak responsif di layar kecil
         margin: 'auto',
-        boxSizing: 'border-box',
+        boxSizing: 'border-box', // Menghitung padding dalam lebar
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         transition: 'transform 0.3s ease',
         position: 'relative',
       }}
     >
-      <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px' }}>
-        {s.title}
+      <h3
+        style={{
+          fontSize: '1.5rem', // Ukuran font lebih kecil untuk tampilan mobile
+          fontWeight: 'bold',
+          textAlign: 'center',
+          marginBottom: '16px',
+        }}
+      >
+        {slides[currentSlide].title}
       </h3>
-      
-      <p style={{ fontSize: '1rem', textAlign: 'justify', margin: '20px 0', whiteSpace: 'pre-line' }}>
-        {s.content}
+
+      <p
+        style={{
+          fontSize: '1rem', // Ukuran font untuk isi konten lebih responsif
+          textAlign: 'justify',
+          margin: '20px 0',
+          whiteSpace: 'pre-line',
+        }}
+      >
+        {slides[currentSlide].content}
       </p>
 
-      {s.image && (
+      {slides[currentSlide].image && (
         <Image
-          src={s.image as string}
-          alt={s.title ?? 'Slide image'}
+          src={slides[currentSlide].image as string}
+          alt={slides[currentSlide].title ?? 'Slide image'}
           style={{
-            width: '100%',
+            width: '100%', // Membuat gambar 100% dari lebar kontainer
             height: 'auto',
             borderRadius: '8px',
             marginTop: '10px',
@@ -159,6 +168,7 @@ const ProfilDesa = () => {
         />
       )}
 
+      {/* Tombol navigasi */}
       <div
         style={{
           position: 'absolute',
@@ -167,7 +177,8 @@ const ProfilDesa = () => {
           transform: 'translate(-50%, -50%)',
           display: 'flex',
           justifyContent: 'space-between',
-          width: '90%',
+          width: '90%', // Mengatur tombol untuk menyesuaikan lebar kontainer
+          maxWidth: '100%',
         }}
       >
         <button
@@ -175,7 +186,7 @@ const ProfilDesa = () => {
           style={{
             background: 'transparent',
             border: 'none',
-            fontSize: '1.5rem',
+            fontSize: '1.5rem', // Menyesuaikan ukuran font tombol
             color: '#fff',
             cursor: 'pointer',
           }}
@@ -187,7 +198,7 @@ const ProfilDesa = () => {
           style={{
             background: 'transparent',
             border: 'none',
-            fontSize: '1.5rem',
+            fontSize: '1.5rem', // Menyesuaikan ukuran font tombol
             color: '#fff',
             cursor: 'pointer',
           }}
@@ -200,3 +211,4 @@ const ProfilDesa = () => {
 };
 
 export default ProfilDesa;
+
