@@ -94,13 +94,14 @@ export default function LayananPage() {
 )}
 
 
-  <style jsx>{`
+<style jsx>{` 
   .page { 
     min-height: 100vh;
     background: transparent !important;
     display: flex;
     justify-content: center; /* Membuat konten berada di tengah */
-    align-items: center;
+    align-items: flex-start; /* Menjaga konten tetap di atas */
+    flex-direction: column; /* Membuat semua konten berada dalam satu kolom */
   }
 
   .container {
@@ -160,6 +161,8 @@ export default function LayananPage() {
     border-radius: 16px;
     color: #fff;
     min-height: 180px; /* Perbesar card */
+    width: 100%;
+    max-width: 320px; /* Perbaiki lebar kartu */
     padding: 24px 20px; 
     display: flex;
     flex-direction: column;
@@ -246,6 +249,7 @@ export default function LayananPage() {
     }
   }
 `}</style>
+
 
 
     </main>
