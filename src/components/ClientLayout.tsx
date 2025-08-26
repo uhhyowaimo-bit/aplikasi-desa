@@ -1,77 +1,57 @@
 'use client';
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
-import Draggable from 'react-draggable';  // Import Draggable
-import LogoAndDate from "@/components/LogoAndDate";  // Import LogoAndDate
-import Countdown from "@/components/Countdown";  // Import Countdown
+import Draggable, { DraggableEvent, DraggableData } from 'react-draggable'; // ⬅️ types dari lib
+import LogoAndDate from "@/components/LogoAndDate";
+
+const DRAG_THRESHOLD = 10; // px
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const { dark } = useAppContext();
-  
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [mounted, setMounted] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef<HTMLButtonElement | null>(null);
+  const dragStart = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  const [dragging, setDragging] = useState(false);  // State untuk mendeteksi apakah sedang di-drag
-  const dragRef = useRef(null);  // Ref untuk elemen yang akan didrag
+  // toggle sidebar hanya kalau BUKAN drag
+  const handleIconClick = () => {
+    if (isDragging) return;
+    setSidebarOpen((v) => !v);
+  };
 
-  const [dragStartPosition, setDragStartPosition] = useState({ x: 0, y: 0 }); // Track posisi awal drag
-  const [dragThreshold, setDragThreshold] = useState(10); // Toleransi gerakan sebelum dianggap drag
+  const onStart = (_e: DraggableEvent, data: DraggableData) => {
+    dragStart.current = { x: data.x, y: data.y };
+    setIsDragging(true);
+  };
 
-  useEffect(() => {
-    setMounted(true); // Set mounted menjadi true setelah komponen dimuat di client-side
-    const loginStatus = localStorage.getItem("isLoggedIn");
-    if (loginStatus === "true") {
-      setIsLoggedIn(true);
+  const onStop = (_e: DraggableEvent, data: DraggableData) => {
+    const dx = data.x - dragStart.current.x;
+    const dy = data.y - dragStart.current.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    // kalau gerak < threshold, anggap klik (biar nyaman di laptop/pc)
+    if (dist < DRAG_THRESHOLD) {
+      setIsDragging(false);
+      setSidebarOpen((v) => !v);
+      return;
     }
-  }, []);
 
- 
-  const handleLoginOpen = () => {
-    setShowLogin(true);
-    setSidebarOpen(false);
+    // benar2 drag → jangan buka sidebar
+    setIsDragging(false);
   };
 
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
     setIsLoggedIn(false);
-    
     window.location.reload();
-  };
-
-  // Fungsi untuk toggle sidebar
-  const toggleSidebar = () => {
-    if (!dragging) {  // Sidebar hanya muncul jika tidak sedang di-drag
-      setSidebarOpen(!sidebarOpen);
-    }
-  };
-
-  // Menggunakan event `onMouseDown` untuk PC dan `onTouchStart` untuk perangkat mobile
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    if (e.type === "mousedown") {
-      setDragStartPosition({ x: (e as React.MouseEvent).clientX, y: (e as React.MouseEvent).clientY });
-      setDragging(false);  // Reset drag status
-    }
-  };
-
-  const handleDragStop = (e: React.MouseEvent | React.TouchEvent) => {
-    const dragDistance = Math.sqrt(
-      Math.pow((e as React.MouseEvent).clientX - dragStartPosition.x, 2) + Math.pow((e as React.MouseEvent).clientY - dragStartPosition.y, 2)
-    );
-
-    // Cek apakah drag lebih dari threshold
-    if (dragDistance > dragThreshold) {
-      setDragging(true);  // Jika lebih dari threshold, anggap sebagai drag
-    } else {
-      setDragging(false);  // Jika tidak, anggap sebagai klik
-      toggleSidebar(); // Sidebar terbuka hanya jika tombol ditekan, bukan digerakkan
-    }
   };
 
   return (
@@ -79,7 +59,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* HEADER */}
       <header
         style={{
-          border: "none", 
+          border: "none",
           position: "sticky",
           top: 0,
           zIndex: 100,
@@ -93,40 +73,33 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           flexDirection: "row",
         }}
       >
-        <LogoAndDate />  {/* Gunakan LogoAndDate di header */}
-        <Countdown />  {/* Menampilkan Countdown */}
+        <LogoAndDate />
       </header>
 
       {/* BURGER BUTTON (Draggable) */}
       {!showLogin && !sidebarOpen && (
-        <Draggable
-          nodeRef={dragRef}
-          onStart={handleDragStart}  // Menandakan mulai drag
-          onStop={handleDragStop}   // Menandakan selesai drag
-        >
+        <Draggable nodeRef={dragRef} onStart={onStart} onStop={onStop} bounds="body">
           <button
             ref={dragRef}
-            onClick={toggleSidebar}  // Sidebar hanya akan terbuka saat tombol ditekan
+            onClick={handleIconClick}
             style={{
-              position: "fixed",  
-              right: "20px",  
-              top: "50%",  
-              transform: "translateY(-50%)",  
+              position: "fixed",
+              right: "20px",
+              top: "50%",
+              transform: "translateY(-50%)",
               zIndex: 2000,
               background: dark ? "#444" : "#6a11cb",
               color: "#fff",
               border: "none",
-              padding: "10px 15px",
-              borderTopLeftRadius: "8px",
-              borderBottomLeftRadius: "8px",
-              cursor: "pointer",
-              width: "40px",  
-              height: "40px", 
+              width: 40,
+              height: 40,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              borderRadius: "50%",  
+              borderRadius: "50%",
+              cursor: "pointer",
             }}
+            aria-label="Open sidebar"
           >
             🍔
           </button>
@@ -145,9 +118,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          minHeight: "100vh",  
+          minHeight: "100vh",
           flexGrow: 1,
-          overflowX: "hidden", 
+          overflowX: "hidden",
         }}
       >
         {children}
@@ -187,65 +160,52 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           header {
             padding: 20px;
           }
-
           main {
             padding: 40px;
           }
-
           button {
             width: auto;
             padding: 12px 20px;
           }
         }
-
         @media (max-width: 1024px) {
           header {
             padding: 15px;
           }
-
           main {
             padding: 30px;
           }
-
           button {
             width: 100%;
             padding: 12px;
           }
         }
-
         @media (max-width: 768px) {
           header {
             flex-direction: column;
             align-items: flex-start;
           }
-
           main {
             padding: 20px;
           }
-
           .sidebar {
             width: 100%;
           }
-
           button {
             width: 100%;
             padding: 12px;
           }
         }
-
         @media (max-width: 480px) {
           header {
             padding: 10px;
           }
-
           main {
             padding: 15px;
           }
-
           button {
             padding: 10px;
           }
-
           header img {
             width: 35px;
             height: 35px;
