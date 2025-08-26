@@ -122,97 +122,81 @@ const ProfilDesa = () => {
     setIsPopupOpen(true);
   };
 
-return (
-  <div
-    style={{
-      padding: '20px',
-      background: slides[currentSlide].color,
-      borderRadius: '12px',
-      color: '#fff',
-      width: '100%',
-      maxWidth: '100%',  // Removed the fixed maxWidth, now it will take full width
-      margin: 'auto',
-      boxSizing: 'border-box', // Include padding in width calculation
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Shadow effect for 3D effect
-      transition: 'transform 0.3s ease',
-      position: 'relative',
-    }}
-  >
-    <h3
-      style={{
-        fontSize: '1.5rem',  // Adjusted font size for better responsiveness
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: '16px',
-      }}
-    >
-      {slides[currentSlide].title}
-    </h3>
-
-    <p
-      style={{
-        fontSize: '1rem',
-        textAlign: 'justify',
-        margin: '20px 0',
-        whiteSpace: 'pre-line', // To respect line breaks in the content
-      }}
-    >
-      {slides[currentSlide].content}
-    </p>
-
-    {/* Displaying image if available */}
-    {slides[currentSlide].image && (
-      <Image
-        src={slides[currentSlide].image as string}
-        alt={slides[currentSlide].title ?? 'Slide image'}
-        style={{
-          width: '100%',
-          height: 'auto',
-          borderRadius: '8px',
-          marginTop: '10px',
-        }}
-      />
-    )}
-
-    {/* Navigation Buttons */}
+ return (
     <div
       style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',  // Center the navigation buttons
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '90%',  // Adjust the width to be more responsive
+        padding: '20px',
+        background: s.color,
+        borderRadius: '12px',
+        color: '#fff',
+        width: '100%',
         maxWidth: '100%',
+        margin: 'auto',
+        boxSizing: 'border-box',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        transition: 'transform 0.3s ease',
+        position: 'relative',
       }}
     >
-      <button
-        onClick={prevSlide}
+      <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px' }}>
+        {s.title}
+      </h3>
+      
+      <p style={{ fontSize: '1rem', textAlign: 'justify', margin: '20px 0', whiteSpace: 'pre-line' }}>
+        {s.content}
+      </p>
+
+      {s.image && (
+        <Image
+          src={s.image as string}
+          alt={s.title ?? 'Slide image'}
+          style={{
+            width: '100%',
+            height: 'auto',
+            borderRadius: '8px',
+            marginTop: '10px',
+          }}
+        />
+      )}
+
+      <div
         style={{
-          background: 'transparent',
-          border: 'none',
-          fontSize: '1.5rem',  // Slightly reduced font size for mobile
-          color: '#fff',
-          cursor: 'pointer',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '90%',
         }}
       >
-        {'<'}
-      </button>
-      <button
-        onClick={nextSlide}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          fontSize: '1.5rem',  // Slightly reduced font size for mobile
-          color: '#fff',
-          cursor: 'pointer',
-        }}
-      >
-        {'>'}
-      </button>
+        <button
+          onClick={prevSlide}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            fontSize: '1.5rem',
+            color: '#fff',
+            cursor: 'pointer',
+          }}
+        >
+          {'<'}
+        </button>
+        <button
+          onClick={nextSlide}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            fontSize: '1.5rem',
+            color: '#fff',
+            cursor: 'pointer',
+          }}
+        >
+          {'>'}
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default ProfilDesa;
