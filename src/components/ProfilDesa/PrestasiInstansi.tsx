@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 
+
 // Data untuk Slide
 const slides = [
   {
@@ -43,6 +44,7 @@ const ProfilDesa = () => {
         position: "relative",
       }}
     >
+
       {/* Judul */}
       <h3 style={{ fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 16 }}>
         {s.title}

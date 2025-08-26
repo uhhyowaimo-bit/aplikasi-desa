@@ -2,7 +2,10 @@
 
 import React, { useState } from 'react';
 import PetaDesa from '@/components/Peta';
+<<<<<<< HEAD
 import Image from "next/image";
+=======
+>>>>>>> 85938e5f4869c2e02f941cd378567203c25bf454
 
 type TextSlide = {
   title: string;
@@ -95,7 +98,11 @@ export default function ProfilDesa() {
             title={s.linkLabel || 'Buka tautan'}
             style={{ display: 'block' }}
           >
+<<<<<<< HEAD
             <Image
+=======
+            <img
+>>>>>>> 85938e5f4869c2e02f941cd378567203c25bf454
               src={s.image}
               alt={s.title}
               style={{
@@ -108,7 +115,11 @@ export default function ProfilDesa() {
             />
           </a>
         ) : (
+<<<<<<< HEAD
           <Image
+=======
+          <img
+>>>>>>> 85938e5f4869c2e02f941cd378567203c25bf454
             src={s.image}
             alt={s.title}
             style={{

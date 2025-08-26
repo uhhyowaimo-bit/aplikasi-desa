@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from "next/image";
 
+
+
 // Data untuk Slide
 const slides = [
   {
@@ -17,12 +19,13 @@ const slides = [
     color: '#facc15',
     content: 'chart SDGS',
     image: '/images/SDGS2.png',
-    link: 'https://contoh.link/chart-sdgs', // ganti sesuai kebutuhan
+    link: 'https://contoh.link/chart-sdgs', // ganti sDGS
     linkLabel: 'Lihat SDGS 2023',
   },
 ];
 
 const SDGS = () => {
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -82,7 +85,10 @@ const SDGS = () => {
 
       {/* Gambar (klik untuk popup) */}
       {image && (
+
         <Image
+
+       
           src={image}
           alt={title}
           onClick={() => setIsPopupOpen(true)}
@@ -169,7 +175,9 @@ const SDGS = () => {
               background: 'transparent',
             }}
           >
+
             <Image
+
               src={image}
               alt={title}
               style={{
@@ -208,4 +216,6 @@ const navBtnStyle = (side: 'left' | 'right'): React.CSSProperties => ({
   boxShadow: '0 4px 12px rgba(0,0,0,.25)',
 });
 
+
 export default SDGS;
+

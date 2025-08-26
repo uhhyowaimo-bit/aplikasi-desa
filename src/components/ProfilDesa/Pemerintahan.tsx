@@ -1,6 +1,9 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
+<<<<<<< HEAD
 import Image from "next/image";
+=======
+>>>>>>> 85938e5f4869c2e02f941cd378567203c25bf454
 
 // Data untuk Slide
 const slides = [
@@ -77,7 +80,11 @@ const ProfilDesa = () => {
 
       {/* Gambar (klik untuk popup) */}
       {image && (
+<<<<<<< HEAD
         <Image
+=======
+        <img
+>>>>>>> 85938e5f4869c2e02f941cd378567203c25bf454
           src={image}
           alt={title}
           onClick={() => setIsPopupOpen(true)}
@@ -137,7 +144,11 @@ const ProfilDesa = () => {
               background: 'transparent',
             }}
           >
+<<<<<<< HEAD
             <Image
+=======
+            <img
+>>>>>>> 85938e5f4869c2e02f941cd378567203c25bf454
               src={image}
               alt={title}
               style={{

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import Image from "next/image";
+=======
+>>>>>>> 85938e5f4869c2e02f941cd378567203c25bf454
 
 // Data untuk Slide
 const slides = [
@@ -59,7 +62,11 @@ const ProfilDesa = () => {
         <div style={{ flex: 1, fontSize: 16, textAlign: "justify" }}>{s.content}</div>
 
         {s.image && (
+<<<<<<< HEAD
           <Image
+=======
+          <img
+>>>>>>> 85938e5f4869c2e02f941cd378567203c25bf454
             src={s.image}
             alt={s.title}
             style={{
