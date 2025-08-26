@@ -94,10 +94,13 @@ export default function LayananPage() {
 )}
 
 
-    <style jsx>{`
+  <style jsx>{`
   .page { 
     min-height: 100vh;
     background: transparent !important;
+    display: flex;
+    justify-content: center; /* Membuat konten berada di tengah */
+    align-items: center;
   }
 
   .container {
@@ -130,6 +133,7 @@ export default function LayananPage() {
     display: grid;
     gap: 18px;
     grid-template-columns: 1fr;
+    justify-items: center; /* Menjaga elemen berada di tengah */
   }
 
   @media (min-width: 640px) {
@@ -242,6 +246,7 @@ export default function LayananPage() {
     }
   }
 `}</style>
+
 
     </main>
   );
