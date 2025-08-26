@@ -1,56 +1,77 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import LoginSheet from "@/components/LoginSheet";
 import { useAppContext } from "@/context/AppContext";
+import Draggable from 'react-draggable';  // Import Draggable
+import LogoAndDate from "@/components/LogoAndDate";  // Import LogoAndDate
+import Countdown from "@/components/Countdown";  // Import Countdown
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const { dark } = useAppContext();
-  const [countdown, setCountdown] = useState("");
-  const [mounted, setMounted] = useState(false);
+  
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [mounted, setMounted] = useState(false);
+
+  const [dragging, setDragging] = useState(false);  // State untuk mendeteksi apakah sedang di-drag
+  const dragRef = useRef(null);  // Ref untuk elemen yang akan didrag
+
+  const [dragStartPosition, setDragStartPosition] = useState({ x: 0, y: 0 }); // Track posisi awal drag
+  const [dragThreshold, setDragThreshold] = useState(10); // Toleransi gerakan sebelum dianggap drag
+
   useEffect(() => {
-    setMounted(true);
+    setMounted(true); // Set mounted menjadi true setelah komponen dimuat di client-side
     const loginStatus = localStorage.getItem("isLoggedIn");
     if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
   }, []);
 
-  useEffect(() => {
-    const targetDate = new Date("2025-08-17T00:00:00").getTime();
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance <= 0) {
-        setCountdown("Hari Proklamasi Telah Tiba!");
-        clearInterval(interval);
-        return;
-      }
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      setCountdown(`${days} Hari : ${hours} Jam : ${minutes} Menit : ${seconds} Detik`);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
+ 
   const handleLoginOpen = () => {
-    setShowLogin(true);  
-    setSidebarOpen(false); 
+    setShowLogin(true);
+    setSidebarOpen(false);
   };
 
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
     setIsLoggedIn(false);
-    setCountdown("");
+    
     window.location.reload();
+  };
+
+  // Fungsi untuk toggle sidebar
+  const toggleSidebar = () => {
+    if (!dragging) {  // Sidebar hanya muncul jika tidak sedang di-drag
+      setSidebarOpen(!sidebarOpen);
+    }
+  };
+
+  // Menggunakan event `onMouseDown` untuk PC dan `onTouchStart` untuk perangkat mobile
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if (e.type === "mousedown") {
+      setDragStartPosition({ x: (e as React.MouseEvent).clientX, y: (e as React.MouseEvent).clientY });
+      setDragging(false);  // Reset drag status
+    }
+  };
+
+  const handleDragStop = (e: React.MouseEvent | React.TouchEvent) => {
+    const dragDistance = Math.sqrt(
+      Math.pow((e as React.MouseEvent).clientX - dragStartPosition.x, 2) + Math.pow((e as React.MouseEvent).clientY - dragStartPosition.y, 2)
+    );
+
+    // Cek apakah drag lebih dari threshold
+    if (dragDistance > dragThreshold) {
+      setDragging(true);  // Jika lebih dari threshold, anggap sebagai drag
+    } else {
+      setDragging(false);  // Jika tidak, anggap sebagai klik
+      toggleSidebar(); // Sidebar terbuka hanya jika tombol ditekan, bukan digerakkan
+    }
   };
 
   return (
@@ -72,61 +93,48 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           flexDirection: "row",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <img
-            src="/logo.png"
-            alt="Logo Desa"
-            style={{
-              width: "45px",
-              height: "45px",
-              marginRight: "10px",
-              borderRadius: "50%",
-              border: "none", 
-            }}
-          />
-          <h3 style={{ margin: 0, fontSize: "20px" }}>Website Desa</h3>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          {mounted && (
-            <>
-              <p style={{ margin: 0, fontSize: "14px" }}>Proklamasi Kemerdekaan R.I.</p>
-              <p style={{ margin: 0, fontSize: "14px", fontWeight: "bold" }}>{countdown}</p>
-            </>
-          )}
-        </div>
+        <LogoAndDate />  {/* Gunakan LogoAndDate di header */}
+        <Countdown />  {/* Menampilkan Countdown */}
       </header>
 
-      {/* BURGER BUTTON */}
+      {/* BURGER BUTTON (Draggable) */}
       {!showLogin && !sidebarOpen && (
-        <button
-          onClick={() => setSidebarOpen(true)}
-          style={{
-            position: "fixed",  
-            right: "20px",  
-            top: "50%",  
-            transform: "translateY(-50%)",  
-            zIndex: 2000,
-            background: dark ? "#444" : "#6a11cb",
-            color: "#fff",
-            border: "none",
-            padding: "10px 15px",
-            borderTopLeftRadius: "8px",
-            borderBottomLeftRadius: "8px",
-            cursor: "pointer",
-            width: "40px",  
-            height: "40px", 
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: "50%",  
-          }}
+        <Draggable
+          nodeRef={dragRef}
+          onStart={handleDragStart}  // Menandakan mulai drag
+          onStop={handleDragStop}   // Menandakan selesai drag
         >
-          🍔
-        </button>
+          <button
+            ref={dragRef}
+            onClick={toggleSidebar}  // Sidebar hanya akan terbuka saat tombol ditekan
+            style={{
+              position: "fixed",  
+              right: "20px",  
+              top: "50%",  
+              transform: "translateY(-50%)",  
+              zIndex: 2000,
+              background: dark ? "#444" : "#6a11cb",
+              color: "#fff",
+              border: "none",
+              padding: "10px 15px",
+              borderTopLeftRadius: "8px",
+              borderBottomLeftRadius: "8px",
+              cursor: "pointer",
+              width: "40px",  
+              height: "40px", 
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "50%",  
+            }}
+          >
+            🍔
+          </button>
+        </Draggable>
       )}
 
       {/* SIDEBAR */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      {sidebarOpen && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
 
       {/* MAIN CONTENT */}
       <main
