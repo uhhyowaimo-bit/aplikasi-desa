@@ -125,80 +125,93 @@ const ProfilDesa = () => {
   return (
     <div
       style={{
-        padding: '20px',
-        background: slides[currentSlide].color, // Warna latar belakang mengikuti warna slide aktif
-        borderRadius: '12px',
-        color: '#fff',
-        width: '100%',
-        maxWidth: '500px', // Ukuran maksimum kotak
-        margin: 'auto',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Bayangan untuk efek 3D
-        transition: 'transform 0.3s ease', // Efek transisi saat berpindah slide
-        position: 'relative', // Supaya tombol bisa diposisikan dengan absolute di dalam konten
+        padding: 20,
+        background: s.color,
+        borderRadius: 12,
+        color: "#fff",
+        width: "100%",
+        maxWidth: "100%",  // Adjusted for mobile responsiveness
+        margin: "auto",
+        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+        transition: "transform 0.3s ease",
+        position: "relative",
+        boxSizing: 'border-box', // To include padding in the width calculation
       }}
     >
-      <h3 style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}>
-        {slides[currentSlide].title} {/* Menampilkan judul sesuai dengan slide aktif */}
+      <h3 style={{ fontSize: "1.5rem", fontWeight: "bold", textAlign: "center", marginBottom: 16 }}>
+        {s.title}
       </h3>
-      <p style={{ fontSize: '16px', textAlign: 'justify', margin: '20px 0', whiteSpace: "pre-line", }}>
-        {slides[currentSlide].content} {/* Menampilkan konten sesuai dengan slide aktif */}
 
-      </p>
-
-  {/* Menampilkan gambar jika ada */}
-      {slides[currentSlide].image && (
-
-        <Image
-          src={slides[currentSlide].image as string}
-          alt={slides[currentSlide].title ?? 'Slide image'}
-
-
-          style={{
-            width: '100%',
-            height: 'auto',
-            borderRadius: '8px',
-            marginTop: '10px',
-          }}
-        />
-      )}
-
-      {/* Tombol navigasi */}
+      {/* Konten + Gambar disamping */}
       <div
         style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)', // Memastikan tombol di tengah
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%', // Lebar tombol disesuaikan dengan area tombol
+          display: "flex",
+          flexDirection: s.image ? "row" : "column", // Kalau ada gambar → sejajar
+          alignItems: "flex-start",
+          gap: 16,
+          flexWrap: "wrap",  // Ensure content wraps on smaller screens
         }}
       >
-        <button
-          onClick={prevSlide}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            fontSize: '24px',
-            color: '#fff',
-            cursor: 'pointer',
-          }}
-        >
-          {'<'}
-        </button>
-        <button
-          onClick={nextSlide}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            fontSize: '24px',
-            color: '#fff',
-            cursor: 'pointer',
-          }}
-        >
-          {'>'}
-        </button>
+        <div style={{ flex: 1, fontSize: "1rem", textAlign: "justify", wordBreak: "break-word" }}>
+          {s.content}
+        </div>
+
+        {s.image && (
+
+          <Image
+            src={s.image}
+            alt={s.title}
+            width={200}  // Adjusted width
+            height={150} // Adjusted height
+            style={{
+              borderRadius: 8,
+              objectFit: "cover",
+              maxWidth: "100%",
+              height: "auto",
+            }}
+          />
+        )}
       </div>
+
+      {/* Tombol Navigasi */}
+      <button
+        onClick={prevSlide}
+        aria-label="Sebelumnya"
+        style={{
+          position: "absolute",
+          left: 8,
+          top: "50%",
+          transform: "translateY(-50%)",
+          background: "rgba(0,0,0,0.28)",
+          border: "none",
+          borderRadius: 8,
+          padding: "6px 10px",
+          color: "#fff",
+          fontSize: "1.5rem",
+          cursor: "pointer",
+        }}
+      >
+        {"<"}
+      </button>
+      <button
+        onClick={nextSlide}
+        aria-label="Berikutnya"
+        style={{
+          position: "absolute",
+          right: 8,
+          top: "50%",
+          transform: "translateY(-50%)",
+          background: "rgba(0,0,0,0.28)",
+          border: "none",
+          borderRadius: 8,
+          padding: "6px 10px",
+          color: "#fff",
+          fontSize: "1.5rem",
+          cursor: "pointer",
+        }}
+      >
+        {">"}
+      </button>
     </div>
   );
 };
