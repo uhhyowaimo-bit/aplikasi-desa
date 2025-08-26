@@ -49,8 +49,7 @@ export default function LayananPage() {
     <main className="page" style={{ background: colors.bg, color: colors.text }}>
       <div className="container">
         <header className="header">
-          <h1>Menu Utama</h1>
-          <p className="sub">Pilih salah satu menu di bawah untuk menampilkan kontennya.</p>
+          <h1>Profil Desa</h1>
         </header>
 
         <div className="grid">
