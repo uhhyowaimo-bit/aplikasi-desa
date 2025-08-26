@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
+import Image from "next/image";
 
 // Data untuk Slide
 const slides = [
@@ -81,7 +82,7 @@ const SDGS = () => {
 
       {/* Gambar (klik untuk popup) */}
       {image && (
-        <img
+        <Image
           src={image}
           alt={title}
           onClick={() => setIsPopupOpen(true)}
@@ -168,7 +169,7 @@ const SDGS = () => {
               background: 'transparent',
             }}
           >
-            <img
+            <Image
               src={image}
               alt={title}
               style={{

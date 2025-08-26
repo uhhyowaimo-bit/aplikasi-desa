@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from "next/image";
 
 // Data untuk Slide
 const slides = [
@@ -61,7 +62,7 @@ const ProfilDesa = () => {
         </div>
 
         {s.image && (
-          <img
+          <Image
             src={s.image}
             alt={s.title}
             style={{

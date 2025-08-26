@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '@/context/AppContext'; // Mengambil context dark mode
+import Image from "next/image";
 
 const MaintenancePage = () => {
   const [mounted, setMounted] = useState(false);
@@ -52,7 +53,7 @@ const MaintenancePage = () => {
         </p>
 
         {/* Gambar Testimoni */}
-        <img
+        <Image
           src="/images/test.png"
           alt="Testimonial"
           style={{

@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
+import Image from "next/image";
 
 // Data untuk Slide: title, color, dan konten
 const slides = [
@@ -145,9 +146,9 @@ const ProfilDesa = () => {
 
   {/* Menampilkan gambar jika ada */}
       {slides[currentSlide].image && (
-        <img
-          src={slides[currentSlide].image}
-          alt={slides[currentSlide].title}
+        <Image
+          src={slides[currentSlide].image as string}
+          alt={slides[currentSlide].title ?? 'Slide image'}
           style={{
             width: '100%',
             height: 'auto',
