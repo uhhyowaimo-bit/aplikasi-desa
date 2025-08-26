@@ -96,7 +96,7 @@ export default function LayananPage() {
 
      <style jsx>{`
   .page { 
-  min-height: 100vh; /* Fix untuk layar penuh */
+  min-height: 100vh;
   background: transparent !important;
 }
 
@@ -116,38 +116,40 @@ export default function LayananPage() {
 h1 {
   font-weight: 800;
   margin: 0;
-  font-size: clamp(20px, 5vw, 28px); /* Responsif pada ukuran layar */
+  font-size: clamp(20px, 5vw, 28px);
 }
 
 .sub {
   margin-top: 6px;
   color: ${colors.sub};
-  font-size: clamp(12px, 3vw, 16px); /* Responsif pada ukuran layar */
+  font-size: clamp(12px, 3vw, 16px);
 }
 
-/* GRID RESPONSIF */
+/* GRID RESPONSIF - Alignment adjustment */
 .grid {
   display: grid;
   gap: 18px;
   grid-template-columns: 1fr;
+  justify-items: center; /* Ensures items are centered */
+  align-items: center;   /* Aligns grid items */
 }
 
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 kolom di perangkat lebih besar */
-  }
+@media (min-width: 640px) { 
+  .grid { 
+    grid-template-columns: repeat(2, 1fr); 
+  } 
 }
 
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 kolom untuk perangkat lebih besar */
-  }
+@media (min-width: 1024px) { 
+  .grid { 
+    grid-template-columns: repeat(3, 1fr); 
+  } 
 }
 
-@media (min-width: 1280px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr); /* 4 kolom di desktop */
-  }
+@media (min-width: 1280px) { 
+  .grid { 
+    grid-template-columns: repeat(4, 1fr); 
+  } 
 }
 
 .card {
@@ -156,7 +158,7 @@ h1 {
   border-radius: 16px;
   color: #fff;
   min-height: 140px;
-  padding: 24px 20px; /* Penambahan padding */
+  padding: 24px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -165,7 +167,7 @@ h1 {
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(0,0,0,.22);
   transition: transform .18s ease, box-shadow .22s ease, opacity .18s ease;
-  margin-bottom: 15px; /* Menambah jarak antar card */
+  margin-bottom: 15px;
 }
 
 .card:hover {
@@ -179,7 +181,7 @@ h1 {
 }
 
 .icon {
-  font-size: 3rem; /* Ukuran ikon lebih besar */
+  font-size: 3rem;
 }
 
 .title {
@@ -218,7 +220,6 @@ h1 {
   to { opacity: 1; }
 }
 
-/* Image */
 img {
   width: 100%;
   height: auto;
@@ -227,18 +228,17 @@ img {
 }
 
 @media (max-width: 640px) {
-  /* Perbaikan untuk tampilan mobile */
   .card {
     padding: 20px 10px;
     text-align: center;
   }
 
   .icon {
-    font-size: 2.5rem; /* Ukuran ikon lebih kecil di perangkat mobile */
+    font-size: 2.5rem;
   }
 
   .title {
-    font-size: 14px; /* Ukuran teks lebih kecil di perangkat mobile */
+    font-size: 14px;
   }
 
   .grid {
@@ -250,6 +250,7 @@ img {
     max-height: 85vh;
   }
 }
+
 
 `}</style>
 
