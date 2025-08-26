@@ -122,98 +122,97 @@ const ProfilDesa = () => {
     setIsPopupOpen(true);
   };
 
-  return (
-    <div
+return (
+  <div
+    style={{
+      padding: '20px',
+      background: slides[currentSlide].color,
+      borderRadius: '12px',
+      color: '#fff',
+      width: '100%',
+      maxWidth: '100%',  // Removed the fixed maxWidth, now it will take full width
+      margin: 'auto',
+      boxSizing: 'border-box', // Include padding in width calculation
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Shadow effect for 3D effect
+      transition: 'transform 0.3s ease',
+      position: 'relative',
+    }}
+  >
+    <h3
       style={{
-        padding: 20,
-        background: s.color,
-        borderRadius: 12,
-        color: "#fff",
-        width: "100%",
-        maxWidth: "100%",  // Adjusted for mobile responsiveness
-        margin: "auto",
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-        transition: "transform 0.3s ease",
-        position: "relative",
-        boxSizing: 'border-box', // To include padding in the width calculation
+        fontSize: '1.5rem',  // Adjusted font size for better responsiveness
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: '16px',
       }}
     >
-      <h3 style={{ fontSize: "1.5rem", fontWeight: "bold", textAlign: "center", marginBottom: 16 }}>
-        {s.title}
-      </h3>
+      {slides[currentSlide].title}
+    </h3>
 
-      {/* Konten + Gambar disamping */}
-      <div
+    <p
+      style={{
+        fontSize: '1rem',
+        textAlign: 'justify',
+        margin: '20px 0',
+        whiteSpace: 'pre-line', // To respect line breaks in the content
+      }}
+    >
+      {slides[currentSlide].content}
+    </p>
+
+    {/* Displaying image if available */}
+    {slides[currentSlide].image && (
+      <Image
+        src={slides[currentSlide].image as string}
+        alt={slides[currentSlide].title ?? 'Slide image'}
         style={{
-          display: "flex",
-          flexDirection: s.image ? "row" : "column", // Kalau ada gambar → sejajar
-          alignItems: "flex-start",
-          gap: 16,
-          flexWrap: "wrap",  // Ensure content wraps on smaller screens
+          width: '100%',
+          height: 'auto',
+          borderRadius: '8px',
+          marginTop: '10px',
         }}
-      >
-        <div style={{ flex: 1, fontSize: "1rem", textAlign: "justify", wordBreak: "break-word" }}>
-          {s.content}
-        </div>
+      />
+    )}
 
-        {s.image && (
-
-          <Image
-            src={s.image}
-            alt={s.title}
-            width={200}  // Adjusted width
-            height={150} // Adjusted height
-            style={{
-              borderRadius: 8,
-              objectFit: "cover",
-              maxWidth: "100%",
-              height: "auto",
-            }}
-          />
-        )}
-      </div>
-
-      {/* Tombol Navigasi */}
+    {/* Navigation Buttons */}
+    <div
+      style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',  // Center the navigation buttons
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '90%',  // Adjust the width to be more responsive
+        maxWidth: '100%',
+      }}
+    >
       <button
         onClick={prevSlide}
-        aria-label="Sebelumnya"
         style={{
-          position: "absolute",
-          left: 8,
-          top: "50%",
-          transform: "translateY(-50%)",
-          background: "rgba(0,0,0,0.28)",
-          border: "none",
-          borderRadius: 8,
-          padding: "6px 10px",
-          color: "#fff",
-          fontSize: "1.5rem",
-          cursor: "pointer",
+          background: 'transparent',
+          border: 'none',
+          fontSize: '1.5rem',  // Slightly reduced font size for mobile
+          color: '#fff',
+          cursor: 'pointer',
         }}
       >
-        {"<"}
+        {'<'}
       </button>
       <button
         onClick={nextSlide}
-        aria-label="Berikutnya"
         style={{
-          position: "absolute",
-          right: 8,
-          top: "50%",
-          transform: "translateY(-50%)",
-          background: "rgba(0,0,0,0.28)",
-          border: "none",
-          borderRadius: 8,
-          padding: "6px 10px",
-          color: "#fff",
-          fontSize: "1.5rem",
-          cursor: "pointer",
+          background: 'transparent',
+          border: 'none',
+          fontSize: '1.5rem',  // Slightly reduced font size for mobile
+          color: '#fff',
+          cursor: 'pointer',
         }}
       >
-        {">"}
+        {'>'}
       </button>
     </div>
-  );
-};
+  </div>
+);
 
 export default ProfilDesa;
